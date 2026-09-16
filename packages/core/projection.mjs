@@ -1,0 +1,30 @@
+export function projectBlueprintMarkdown(blueprint) {
+  const lines = [
+    `# ${blueprint.blueprintId} · Blueprint r${blueprint.revision}`,
+    '',
+    `- Digest: ${blueprint.digest}`,
+    `- Granularity: ${blueprint.granularity}`,
+    `- Generation ready: ${blueprint.generationReady}`,
+    `- Runtime verification: ${blueprint.runtimeVerification}`,
+    `- Rights: ${blueprint.rights}`,
+    '',
+    '## Structure',
+    '',
+    ...blueprint.nodes.map((node) => `- ${node.id} (${node.kind}) → layout=${node.layoutRef}, style=${node.styleRef}`),
+    '',
+    '## States and events',
+    '',
+    ...blueprint.states.map((state) => `- state:${state.id} — ${state.observation}`),
+    ...blueprint.events.map((event) => `- event:${event.id} — ${event.trigger}; ${event.fromState} → ${event.toState}`),
+    '',
+    '## Blocking issues',
+    '',
+    ...(blueprint.blockingIssues.length ? blueprint.blockingIssues.map((entry) => `- ${entry}`) : ['- none']),
+    '',
+    '## Runtime evidence gaps',
+    '',
+    ...(blueprint.runtimeEvidenceGaps.length ? blueprint.runtimeEvidenceGaps.map((entry) => `- ${entry}`) : ['- none']),
+    '',
+  ];
+  return lines.join('\n');
+}

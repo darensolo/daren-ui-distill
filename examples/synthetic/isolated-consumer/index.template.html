@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="./package/styles.css">
+  <style>html,body{margin:0}#consumer{box-sizing:border-box;width:100%;min-height:44px}</style>
+</head>
+<body>
+  <main id="consumer"></main>
+  <output id="event-log" aria-live="polite"></output>
+  <script type="module">
+    import { mount, definition } from './package/component.js';
+    const events = [];
+    globalThis.__consumer = { events, definition };
+    mount(document.querySelector('#consumer'), {
+      onIntent(intent, detail) {
+        events.push({ intent, eventId: detail.eventId });
+        document.querySelector('#event-log').textContent = JSON.stringify(events);
+      },
+    });
+  </script>
+</body>
+</html>

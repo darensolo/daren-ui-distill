@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://daren.design/schemas/distill/common.schema.json",
+  "title": "Daren UI Distill common values",
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "revision", "digest", "relativePath"],
+      "properties": {
+        "kind": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "id": { "type": "string", "minLength": 1 },
+        "revision": { "type": "integer", "minimum": 1 },
+        "digest": { "$ref": "#/$defs/digest" },
+        "relativePath": { "$ref": "#/$defs/relativePath" }
+      }
+    },
+    "contextRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "ref"],
+          "properties": { "status": { "const": "available" }, "ref": { "$ref": "#/$defs/ref" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": { "status": { "const": "not-applicable" }, "reason": { "type": "string", "minLength": 1 } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reason"],
+          "properties": { "status": { "const": "missing" }, "reason": { "type": "string", "minLength": 1 } }
+        }
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "subject", "kind", "ref", "sourceBuildContext", "observation"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "subject": { "enum": ["source", "candidate"] },
+        "kind": { "enum": ["static", "screenshot", "accessibility", "interaction", "computed-style"] },
+        "ref": { "$ref": "#/$defs/ref" },
+        "sourceBuildContext": { "$ref": "#/$defs/contextRef" },
+        "stateId": { "type": "string", "minLength": 1 },
+        "observation": { "enum": ["observed", "inferred", "unknown", "unsupported"] }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readRoots", "writeRoots", "deniedEffects", "authorizationRef", "revision"],
+      "properties": {
+        "readRoots": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/relativePath" } },
+        "writeRoots": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/relativePath" } },
+        "deniedEffects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["source-write", "library-write", "site-write", "public-deploy", "secret-read", "unapproved-network", "untrusted-process"] }
+        },
+        "authorizationRef": { "$ref": "#/$defs/ref" },
+        "revision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "qualityState": { "enum": ["passed", "residual", "blocked", "cancelled", "not-applicable"] },
+    "productionStage": { "enum": ["dissect", "replicate", "adapt", "register", "publish"] },
+    "userAction": { "enum": ["dissect", "replicate", "adapt", "register", "publish", "inspect"] },
+    "typedError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "subjectRef", "retryable", "nextAction"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "subjectRef": { "$ref": "#/$defs/ref" },
+        "retryable": { "type": "boolean" },
+        "nextAction": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

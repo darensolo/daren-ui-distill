@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://daren.design/schemas/distill/gap-inventory.schema.json",
+  "title": "C7 Gap inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "revision", "baselineRefs", "items"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "baselineRefs": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/ref" } },
+    "items": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["sampleId", "level", "sourceRefs", "existingAssetRefs", "disposition", "reason", "requiredStates", "requiredEvents"],
+        "properties": {
+          "sampleId": { "type": "string", "pattern": "^[A-Z][0-9]{2}$" },
+          "level": { "enum": ["L2", "L3"] },
+          "sourceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/ref" } },
+          "existingAssetRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } },
+          "disposition": { "enum": ["reuse", "extend", "new", "gap"] },
+          "reason": { "type": "string", "minLength": 1 },
+          "requiredStates": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "requiredEvents": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    }
+  }
+}

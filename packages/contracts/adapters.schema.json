@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://daren.design/schemas/distill/adapters.schema.json",
+  "title": "C6 Adapter contract result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "portKind", "id", "version", "capabilities", "check", "result"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "portKind": { "enum": ["host", "library", "site"] },
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "capabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "check": {
+      "type": "object", "additionalProperties": false, "required": ["status", "reason"],
+      "properties": { "status": { "enum": ["supported", "unsupported", "blocked"] }, "reason": { "type": "string", "minLength": 1 } }
+    },
+    "result": {
+      "type": "object", "additionalProperties": false, "required": ["operationId", "inputRef", "status", "effectReceipts"],
+      "properties": { "operationId": { "type": "string", "minLength": 1 }, "inputRef": { "$ref": "common.schema.json#/$defs/ref" }, "status": { "enum": ["succeeded", "unsupported", "blocked", "failed"] }, "receipt": { "$ref": "common.schema.json#/$defs/ref" }, "effectReceipts": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } }
+    }
+  }
+}

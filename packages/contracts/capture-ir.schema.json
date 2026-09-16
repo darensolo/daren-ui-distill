@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://daren.design/schemas/distill/capture-ir.schema.json",
+  "title": "C2 CaptureBundle and UIReplicaIR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "source", "sourceBuildContext", "archiveContext", "evidence", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "kind": { "enum": ["capture-bundle", "ui-replica-ir"] },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "ref"],
+      "properties": {
+        "kind": { "enum": ["installed-app", "application-archive", "web-url", "asset-directory", "evidence-bundle"] },
+        "ref": { "$ref": "common.schema.json#/$defs/ref" }
+      }
+    },
+    "sourceBuildContext": { "$ref": "common.schema.json#/$defs/contextRef" },
+    "archiveContext": { "$ref": "common.schema.json#/$defs/contextRef" },
+    "evidence": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/evidence" } },
+    "provenance": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/ref" } },
+    "nodes": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } },
+    "states": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["id", "evidenceRefs"], "properties": { "id": { "type": "string", "minLength": 1 }, "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } } } },
+    "events": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["id", "trigger", "observation"], "properties": { "id": { "type": "string", "minLength": 1 }, "trigger": { "enum": ["click", "keyboard", "input", "stream-update", "complete", "cancel"] }, "observation": { "enum": ["observed", "inferred", "unknown", "unsupported"] } } } },
+    "resources": {
+      "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["relativePath", "offset", "size", "digest"],
+      "properties": { "relativePath": { "$ref": "common.schema.json#/$defs/relativePath" }, "offset": { "type": "integer", "minimum": 0 }, "size": { "type": "integer", "minimum": 0, "maximum": 1073741824 }, "digest": { "$ref": "common.schema.json#/$defs/digest" } }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "ui-replica-ir" } } },
+      "then": { "required": ["nodes", "states", "events", "resources"] }
+    },
+    {
+      "if": { "properties": { "source": { "properties": { "kind": { "enum": ["installed-app", "application-archive"] } }, "required": ["kind"] } } },
+      "then": {
+        "properties": {
+          "sourceBuildContext": { "properties": { "status": { "const": "available" } }, "required": ["status", "ref"] },
+          "archiveContext": { "properties": { "status": { "const": "available" } }, "required": ["status", "ref"] }
+        }
+      }
+    }
+  ]
+}

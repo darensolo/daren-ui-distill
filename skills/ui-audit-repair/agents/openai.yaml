@@ -1,0 +1,6 @@
+interface:
+  display_name: "UI Audit & Repair"
+  short_description: "Audit UI assets and repair only when requested"
+  default_prompt: "Use $ui-audit-repair to audit this UI asset without changing it."
+policy:
+  allow_implicit_invocation: true

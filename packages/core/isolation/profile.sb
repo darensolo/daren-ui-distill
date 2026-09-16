@@ -1,0 +1,14 @@
+(version 1)
+(deny default)
+
+(allow process-fork)
+(allow process-exec (literal (param "EXECUTABLE")))
+
+(allow file-read*
+  (literal (param "EXECUTABLE"))
+  (subpath (param "READ_ROOT"))
+  (subpath "/System/Library")
+  (subpath "/usr/lib"))
+
+(allow file-write* (subpath (param "WRITE_ROOT")))
+(deny network*)

@@ -1,0 +1,6 @@
+interface:
+  display_name: "UI Decomposition"
+  short_description: "Turn authorized UI evidence into a Blueprint"
+  default_prompt: "Use $ui-decomposer to decompose this authorized UI source into a validated Blueprint."
+policy:
+  allow_implicit_invocation: true

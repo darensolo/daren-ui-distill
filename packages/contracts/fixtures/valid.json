@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "cases": [
+    {
+      "schema": "job",
+      "name": "job-dissect",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "id": "job-01",
+        "revision": 1,
+        "versions": { "schema": "1.0.0", "core": "0.1.0", "plugin": "0.1.0" },
+        "operation": "run",
+        "invocationOrigin": "explicit-skill",
+        "canonicalSkillId": "ui-decomposer",
+        "compatibilityMode": "canonical",
+        "requestedActions": ["dissect"],
+        "resolvedStages": ["dissect"],
+        "sourceRef": { "kind": "source", "id": "codex-g01", "revision": 1, "digest": "0000000000000000000000000000000000000000000000000000000000000000", "relativePath": "inputs/codex-g01" },
+        "scope": {
+          "readRoots": ["inputs"],
+          "writeRoots": ["artifacts/job-01"],
+          "deniedEffects": ["source-write", "library-write", "site-write", "public-deploy", "secret-read", "unapproved-network", "untrusted-process"],
+          "authorizationRef": { "kind": "authorization", "id": "auth-01", "revision": 1, "digest": "1111111111111111111111111111111111111111111111111111111111111111", "relativePath": "authorizations/auth-01.json" },
+          "revision": 1
+        },
+        "budget": 0,
+        "repairPolicy": "none",
+        "capabilities": { "capture": true, "library": false, "site": false }
+      }
+    },
+    {
+      "schema": "capture-ir",
+      "name": "capture-evidence-bundle",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "kind": "capture-bundle",
+        "source": { "kind": "evidence-bundle", "ref": { "kind": "source", "id": "screens", "revision": 1, "digest": "2222222222222222222222222222222222222222222222222222222222222222", "relativePath": "inputs/screens" } },
+        "sourceBuildContext": { "status": "not-applicable", "reason": "screen evidence has no installed build" },
+        "archiveContext": { "status": "not-applicable", "reason": "screen evidence has no archive" },
+        "evidence": [
+          { "id": "ev-01", "subject": "source", "kind": "screenshot", "ref": { "kind": "evidence", "id": "shot-01", "revision": 1, "digest": "3333333333333333333333333333333333333333333333333333333333333333", "relativePath": "inputs/screens/shot.png" }, "sourceBuildContext": { "status": "not-applicable", "reason": "screen-only source" }, "stateId": "default", "observation": "observed" }
+        ],
+        "provenance": [{ "kind": "source", "id": "screens", "revision": 1, "digest": "2222222222222222222222222222222222222222222222222222222222222222", "relativePath": "inputs/screens" }]
+      }
+    },
+    {
+      "schema": "asset-package",
+      "name": "asset-source-replica",
+      "value": {
+        "schemaVersion": "1.0.0", "assetId": "codex-tool-call", "revision": 1, "variant": "source-replica", "level": "L2", "deliveryStatus": "preview-ready",
+        "files": [{ "relativePath": "src/index.mjs", "digest": "4444444444444444444444444444444444444444444444444444444444444444" }],
+        "exports": ["CodexToolCall"], "dependencies": [], "props": ["status"], "states": ["default"], "intents": ["toggle"], "rights": "allowed",
+        "blueprintRef": { "kind": "blueprint", "id": "codex-tool-call", "revision": 1, "digest": "5555555555555555555555555555555555555555555555555555555555555555", "relativePath": "artifacts/blueprint.json" }
+      }
+    },
+    {
+      "schema": "quality",
+      "name": "quality-source-fidelity",
+      "value": {
+        "schemaVersion": "1.0.0", "kind": "fidelity-report",
+        "subjectRef": { "kind": "asset-package", "id": "codex-tool-call", "revision": 1, "digest": "6666666666666666666666666666666666666666666666666666666666666666", "relativePath": "artifacts/asset.json" },
+        "profile": "source-fidelity",
+        "profileRef": { "kind": "quality-profile", "id": "source-fidelity", "revision": 1, "digest": "7777777777777777777777777777777777777777777777777777777777777777", "relativePath": "profiles/source-fidelity.json" },
+        "checksetDigest": "8888888888888888888888888888888888888888888888888888888888888888",
+        "baselineContext": { "status": "available", "ref": { "kind": "baseline", "id": "codex-source", "revision": 1, "digest": "9999999999999999999999999999999999999999999999999999999999999999", "relativePath": "baselines/codex.json" } },
+        "targetContext": { "status": "not-applicable", "reason": "source fidelity has no design target" },
+        "allowedDeltaContext": { "status": "not-applicable", "reason": "source fidelity permits no target adaptation" },
+        "freshness": { "status": "fresh", "inputDigests": ["9999999999999999999999999999999999999999999999999999999999999999"] },
+        "checks": [{ "id": "structure", "status": "passed", "mandatory": true, "evidenceRefs": [{ "kind": "evidence", "id": "structure", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/structure.json" }] }],
+        "findings": [], "qualityOutcome": "passed", "runtimeVerification": "verified", "runtimeEvidenceGaps": []
+      }
+    },
+    {
+      "schema": "feedback",
+      "name": "feedback-implementation-fix",
+      "value": {
+        "schemaVersion": "1.0.0", "jobId": "job-01", "stageRunId": "replicate-01", "baseRevision": 1,
+        "inputArtifactRef": { "kind": "asset-package", "id": "codex-tool-call", "revision": 1, "digest": "6666666666666666666666666666666666666666666666666666666666666666", "relativePath": "artifacts/asset.json" },
+        "feedbackType": "implementation-fix", "request": "restore the locked keyboard event", "effectScope": ["artifacts/job-01/candidate"], "invalidatedReportRefs": [], "resultRef": null, "nextAction": "reaudit"
+      }
+    },
+    {
+      "schema": "adapters",
+      "name": "adapter-library-unsupported",
+      "value": {
+        "schemaVersion": "1.0.0", "portKind": "library", "id": "library-contract", "version": "1.0.0", "capabilities": [],
+        "check": { "status": "unsupported", "reason": "DH05 MVP has no Library adapter" },
+        "result": { "operationId": "op-library-01", "inputRef": { "kind": "asset-package", "id": "codex-tool-call", "revision": 1, "digest": "6666666666666666666666666666666666666666666666666666666666666666", "relativePath": "artifacts/asset.json" }, "status": "unsupported", "effectReceipts": [] }
+      }
+    },
+    {
+      "schema": "gap-inventory",
+      "name": "gap-inventory-g01",
+      "value": {
+        "schemaVersion": "1.0.0", "revision": 1,
+        "baselineRefs": [{ "kind": "inventory", "id": "dh04", "revision": 1, "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "relativePath": "inputs/dh04.json" }],
+        "items": [{ "sampleId": "G01", "level": "L2", "sourceRefs": [{ "kind": "source", "id": "codex-g01", "revision": 1, "digest": "0000000000000000000000000000000000000000000000000000000000000000", "relativePath": "inputs/codex-g01" }], "existingAssetRefs": [], "disposition": "gap", "reason": "locked engineering sample pending final P05 qualification", "requiredStates": ["default", "expanded"], "requiredEvents": ["toggle"] }]
+      }
+    },
+    {
+      "schema": "stage-execution",
+      "name": "stage-completed-dissect",
+      "value": {
+        "schemaVersion": "1.0.0", "chainId": "chain-01", "requestedActions": ["dissect"], "resolvedStages": ["dissect"],
+        "stageRuns": [{ "id": "dissect-01", "kind": "dissect", "inputRefs": [{ "kind": "source", "id": "codex-g01", "revision": 1, "digest": "0000000000000000000000000000000000000000000000000000000000000000", "relativePath": "inputs/codex-g01" }], "outputRefs": [{ "kind": "blueprint", "id": "codex-tool-call", "revision": 1, "digest": "5555555555555555555555555555555555555555555555555555555555555555", "relativePath": "artifacts/blueprint.json" }], "reportRefs": [], "status": "succeeded", "effectReceipts": [] }],
+        "status": "completed", "resumePoint": null, "remainingBudget": 3
+      }
+    },
+    {
+      "schema": "blueprint",
+      "name": "blueprint-generation-ready",
+      "value": {
+        "schemaVersion": "1.0.0", "producerVersion": "0.1.0", "blueprintId": "codex-tool-call", "revision": 1, "digest": "5555555555555555555555555555555555555555555555555555555555555555",
+        "sourceRef": { "kind": "source", "id": "codex-g01", "revision": 1, "digest": "0000000000000000000000000000000000000000000000000000000000000000", "relativePath": "inputs/codex-g01" }, "granularity": "component",
+        "nodes": [{ "id": "root", "parentId": null, "kind": "control", "children": [], "layoutRef": "layout-root", "styleRef": "style-root", "evidenceRefs": [{ "kind": "evidence", "id": "static-root", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/root.json" }] }],
+        "layout": [{ "id": "layout-root", "display": "flex", "values": { "gap": 8 }, "evidenceRefs": [{ "kind": "evidence", "id": "static-root", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/root.json" }] }],
+        "styles": [{ "id": "style-root", "properties": { "color": "#ffffff" }, "evidenceRefs": [{ "kind": "evidence", "id": "static-root", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/root.json" }] }],
+        "resources": [], "props": ["status"],
+        "states": [{ "id": "default", "observation": "observed", "evidenceRefs": [{ "kind": "evidence", "id": "static-root", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/root.json" }] }],
+        "events": [{ "id": "toggle", "trigger": "click", "targetNodeId": "root", "fromState": "default", "toState": "default", "intent": "toggle details", "evidenceRefs": [{ "kind": "evidence", "id": "static-root", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/root.json" }] }],
+        "recipe": { "composition": ["root"], "slots": [], "resourceRefs": [], "stateExamples": ["default"] },
+        "checkBaseline": { "kind": "check-baseline", "id": "codex-g01", "revision": 1, "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "relativePath": "baselines/codex-g01.json" },
+        "evidenceRefs": [{ "kind": "evidence", "id": "static-root", "revision": 1, "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "relativePath": "evidence/root.json" }],
+        "rights": "allowed", "blockingIssues": [], "generationReady": true, "runtimeVerification": "unverified", "runtimeEvidenceGaps": ["stream state not yet observed"]
+      }
+    }
+  ]
+}

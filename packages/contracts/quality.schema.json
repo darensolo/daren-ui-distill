@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://daren.design/schemas/distill/quality.schema.json",
+  "title": "C4 FidelityReport and ConvergenceRun",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "subjectRef", "profile", "profileRef", "checksetDigest", "baselineContext", "targetContext", "allowedDeltaContext"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "kind": { "enum": ["fidelity-report", "convergence-run"] },
+    "subjectRef": { "$ref": "common.schema.json#/$defs/ref" },
+    "profile": { "enum": ["common", "source-fidelity", "design-adaptation", "blueprint-readiness"] },
+    "profileRef": { "$ref": "common.schema.json#/$defs/ref" },
+    "checksetDigest": { "$ref": "common.schema.json#/$defs/digest" },
+    "baselineContext": { "$ref": "common.schema.json#/$defs/contextRef" },
+    "targetContext": { "$ref": "common.schema.json#/$defs/contextRef" },
+    "allowedDeltaContext": { "$ref": "common.schema.json#/$defs/contextRef" },
+    "freshness": {
+      "type": "object", "additionalProperties": false, "required": ["status", "inputDigests"],
+      "properties": { "status": { "enum": ["fresh", "stale"] }, "inputDigests": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/digest" } } }
+    },
+    "checks": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "status", "mandatory", "evidenceRefs"], "properties": { "id": { "type": "string", "minLength": 1 }, "status": { "enum": ["passed", "failed", "unknown", "unsupported", "not-applicable"] }, "mandatory": { "type": "boolean" }, "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } } }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "severity", "status", "subjectRef"], "properties": { "id": { "type": "string", "minLength": 1 }, "severity": { "enum": ["P0", "P1", "P2", "P3"] }, "status": { "enum": ["open", "fixed", "accepted"] }, "subjectRef": { "$ref": "common.schema.json#/$defs/ref" } } }
+    },
+    "qualityOutcome": { "$ref": "common.schema.json#/$defs/qualityState" },
+    "runtimeVerification": { "enum": ["unverified", "verified", "blocked"] },
+    "runtimeEvidenceGaps": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "mode": { "enum": ["audit-only", "repair"] },
+    "rounds": { "type": "array", "maxItems": 3, "items": { "type": "object", "additionalProperties": false, "required": ["revision", "reportRef"], "properties": { "revision": { "type": "integer", "minimum": 1 }, "reportRef": { "$ref": "common.schema.json#/$defs/ref" }, "patchRef": { "$ref": "common.schema.json#/$defs/ref" } } } },
+    "consumedBudget": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "terminalReason": { "enum": ["passed", "residual", "blocked", "cancelled", "budget-exhausted", "no-findings"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "kind": { "const": "fidelity-report" } } }, "then": { "required": ["freshness", "checks", "findings", "qualityOutcome", "runtimeVerification", "runtimeEvidenceGaps"] } },
+    { "if": { "properties": { "kind": { "const": "convergence-run" } } }, "then": { "required": ["mode", "rounds", "consumedBudget", "terminalReason", "qualityOutcome"] } },
+    { "if": { "properties": { "profile": { "const": "source-fidelity" } } }, "then": { "properties": { "baselineContext": { "properties": { "status": { "const": "available" } } }, "targetContext": { "properties": { "status": { "const": "not-applicable" } } }, "allowedDeltaContext": { "properties": { "status": { "const": "not-applicable" } } } } } },
+    { "if": { "properties": { "profile": { "const": "design-adaptation" } } }, "then": { "properties": { "baselineContext": { "properties": { "status": { "const": "available" } } }, "targetContext": { "properties": { "status": { "const": "available" } } }, "allowedDeltaContext": { "properties": { "status": { "const": "available" } } } } } },
+    { "if": { "properties": { "profile": { "const": "blueprint-readiness" } } }, "then": { "properties": { "baselineContext": { "properties": { "status": { "const": "available" } } }, "targetContext": { "properties": { "status": { "const": "not-applicable" } } }, "allowedDeltaContext": { "properties": { "status": { "const": "not-applicable" } } } } } },
+    {
+      "if": {
+        "properties": { "kind": { "const": "fidelity-report" }, "qualityOutcome": { "const": "passed" } },
+        "required": ["kind", "qualityOutcome"]
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "not": {
+              "contains": {
+                "type": "object",
+                "properties": { "severity": { "enum": ["P0", "P1"] }, "status": { "const": "open" } },
+                "required": ["severity", "status"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

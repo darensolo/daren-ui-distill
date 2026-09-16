@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://daren.design/schemas/distill/blueprint.schema.json",
+  "title": "C9 Blueprint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "producerVersion", "blueprintId", "revision", "digest", "sourceRef", "granularity", "nodes", "layout", "styles", "resources", "props", "states", "events", "recipe", "checkBaseline", "evidenceRefs", "rights", "blockingIssues", "generationReady", "runtimeVerification", "runtimeEvidenceGaps"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "producerVersion": { "type": "string", "minLength": 1 },
+    "blueprintId": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "digest": { "$ref": "common.schema.json#/$defs/digest" },
+    "sourceRef": { "$ref": "common.schema.json#/$defs/ref" },
+    "granularity": { "enum": ["icon", "component", "block", "page"] },
+    "nodes": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "parentId", "kind", "children", "layoutRef", "styleRef", "evidenceRefs"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "parentId": { "type": ["string", "null"] },
+          "kind": { "enum": ["container", "text", "control", "icon", "slot"] },
+          "children": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "layoutRef": { "type": "string", "minLength": 1 },
+          "styleRef": { "type": "string", "minLength": 1 },
+          "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } }
+        }
+      }
+    },
+    "layout": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "display", "values", "evidenceRefs"], "properties": { "id": { "type": "string", "minLength": 1 }, "display": { "enum": ["block", "flex", "grid", "inline", "inline-flex"] }, "values": { "type": "object", "additionalProperties": { "type": ["string", "number"] } }, "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } } }
+    },
+    "styles": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "properties", "evidenceRefs"], "properties": { "id": { "type": "string", "minLength": 1 }, "properties": { "type": "object", "additionalProperties": { "type": ["string", "number"] } }, "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } } }
+    },
+    "resources": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } },
+    "props": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "states": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "observation", "evidenceRefs"], "properties": { "id": { "type": "string", "minLength": 1 }, "observation": { "enum": ["observed", "inferred", "unknown", "unsupported"] }, "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } } }
+    },
+    "events": {
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "trigger", "targetNodeId", "fromState", "toState", "intent", "evidenceRefs"], "properties": { "id": { "type": "string", "minLength": 1 }, "trigger": { "enum": ["click", "keyboard", "input", "stream-update", "complete", "cancel"] }, "targetNodeId": { "type": "string", "minLength": 1 }, "fromState": { "type": "string", "minLength": 1 }, "toState": { "type": "string", "minLength": 1 }, "intent": { "type": "string", "minLength": 1 }, "evidenceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } } } }
+    },
+    "recipe": { "type": "object", "additionalProperties": false, "required": ["composition", "slots", "resourceRefs", "stateExamples"], "properties": { "composition": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }, "slots": { "type": "array", "items": { "type": "string", "minLength": 1 } }, "resourceRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/ref" } }, "stateExamples": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } } } },
+    "checkBaseline": { "$ref": "common.schema.json#/$defs/ref" },
+    "evidenceRefs": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/ref" } },
+    "rights": { "enum": ["allowed", "restricted", "unknown", "prohibited"] },
+    "blockingIssues": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "generationReady": { "type": "boolean" },
+    "runtimeVerification": { "enum": ["unverified", "verified", "blocked"] },
+    "runtimeEvidenceGaps": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "runtimeVerification": { "const": "verified" } }, "required": ["runtimeVerification"] },
+      "then": { "properties": { "runtimeEvidenceGaps": { "maxItems": 0 } } }
+    }
+  ]
+}

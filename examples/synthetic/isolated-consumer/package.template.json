@@ -1,0 +1,7 @@
+{
+  "name": "dh05-isolated-consumer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "E2E_FIXTURE_ONLY consumer of a copied Daren UI Distill public AssetPackage"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "daren-ui-distill",
+  "version": "0.2.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Local-first UI decomposition, replication, adaptation, registration, publication, and bounded audit tooling.",
+  "type": "module",
+  "engines": {
+    "node": ">=24.20 <26"
+  },
+  "scripts": {
+    "test": "pnpm verify:public-candidate && pnpm test:contracts && pnpm test:core && pnpm test:adapter && pnpm test:cli && pnpm test:plugins",
+    "verify:public-candidate": "node scripts/verify-public-candidate.mjs",
+    "test:contracts": "node --test packages/contracts/contracts.test.mjs",
+    "test:core": "node --test packages/core/tests/*.test.mjs",
+    "test:adapter": "node --test adapters/local-folder/local-folder.test.mjs",
+    "test:cli": "node --test packages/cli/cli.test.mjs",
+    "test:plugins": "node --test plugins/codex/tests/distribution.test.mjs plugins/qoder/tests/distribution.test.mjs",
+    "build:codex": "node build.mjs --target codex --out dist/codex",
+    "build:qoder": "node build.mjs --target qoder --out dist/qoder"
+  },
+  "dependencies": {
+    "ajv": "~8.20.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "~1.62.1",
+    "esbuild": "0.21.5",
+    "jsdom": "~30.0.1"
+  }
+}
