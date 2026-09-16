@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cp, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { access, cp, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -68,6 +68,8 @@ test('build is deterministic and built package self-checks with version parity',
   const manifest = JSON.parse(await readFile(path.join(first, '.codex-plugin/plugin.json'), 'utf8'));
   const release = JSON.parse(await readFile(path.join(first, 'runtime/release.json'), 'utf8'));
   assert.equal(manifest.version, release.contracts.plugin);
+  await access(path.join(first, 'runtime/vendor/ajv.mjs'));
+  await assert.rejects(access(path.join(first, 'node_modules')), /ENOENT/);
   const check = spawnSync(process.execPath, [path.join(first, 'scripts/self-check.mjs')], { encoding: 'utf8' });
   assert.equal(check.status, 0, check.stderr);
   assert.equal(JSON.parse(check.stdout).status, 'passed');

@@ -37,7 +37,9 @@ test('Qoder build contains only its host manifest and canonical skill projection
   }
   assert.equal(await treeDigest(first), await treeDigest(second));
   await access(path.join(first, '.qoder-plugin/plugin.json'));
+  await access(path.join(first, 'runtime/vendor/ajv.mjs'));
   await assert.rejects(access(path.join(first, '.codex-plugin/plugin.json')), /ENOENT/);
+  await assert.rejects(access(path.join(first, 'node_modules')), /ENOENT/);
 
   const manifest = JSON.parse(await readFile(path.join(first, '.qoder-plugin/plugin.json'), 'utf8'));
   const release = JSON.parse(await readFile(path.join(first, 'runtime/release.json'), 'utf8'));

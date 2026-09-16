@@ -1,7 +1,8 @@
-import { access, chmod, cp, mkdir, readFile, realpath } from 'node:fs/promises';
+import { access, chmod, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { build as bundle } from 'esbuild';
 
 const scriptRoot = path.dirname(fileURLToPath(import.meta.url));
 const sharedRoot = path.resolve(scriptRoot, '..');
@@ -25,21 +26,6 @@ const platforms = {
 
 async function absent(target) {
   try { await access(target); return false; } catch (error) { if (error.code === 'ENOENT') return true; throw error; }
-}
-
-async function copyDependency(name, output, seen, sourceHint) {
-  if (seen.has(name)) return;
-  seen.add(name);
-  const pieces = name.split('/');
-  const source = sourceHint ?? await realpath(path.dirname(requireFromTool.resolve(`${name}/package.json`)));
-  const destination = path.join(output, 'node_modules', ...pieces);
-  await mkdir(path.dirname(destination), { recursive: true });
-  await cp(source, destination, { recursive: true, dereference: true });
-  const manifest = JSON.parse(await readFile(path.join(source, 'package.json'), 'utf8'));
-  for (const dependency of Object.keys(manifest.dependencies ?? {}).sort()) {
-    const dependencySource = await realpath(path.join(source, '..', ...dependency.split('/')));
-    await copyDependency(dependency, output, seen, dependencySource);
-  }
 }
 
 export async function buildPluginDistribution(platform, outputDirectory) {
@@ -76,10 +62,30 @@ export async function buildPluginDistribution(platform, outputDirectory) {
   }
   await cp(path.join(repoRoot, 'adapters/local-folder'), path.join(output, 'runtime/adapters/local-folder'), { recursive: true, dereference: true });
   for (const file of ['package.json', 'release.json']) await cp(path.join(repoRoot, file), path.join(output, 'runtime', file));
+
+  // Qoder deliberately omits node_modules when importing a local plugin. Bundle
+  // the production validator into a host-neutral runtime directory so the
+  // installed cache remains executable on both supported agent platforms.
   const packageManifest = JSON.parse(await readFile(path.join(repoRoot, 'package.json'), 'utf8'));
-  const seen = new Set();
-  for (const dependency of Object.keys(packageManifest.dependencies ?? {}).sort()) await copyDependency(dependency, output, seen);
+  const productionDependencies = Object.keys(packageManifest.dependencies ?? {}).sort();
+  if (productionDependencies.join(',') !== 'ajv') throw new Error('plugin bundler must explicitly handle every production dependency');
+  const vendorDirectory = path.join(output, 'runtime/vendor');
+  await mkdir(vendorDirectory, { recursive: true });
+  await bundle({
+    entryPoints: [requireFromTool.resolve('ajv')],
+    bundle: true,
+    format: 'esm',
+    platform: 'node',
+    target: 'node24',
+    outfile: path.join(vendorDirectory, 'ajv.mjs'),
+    logLevel: 'silent',
+  });
+  const validatorPath = path.join(output, 'runtime/packages/contracts/validate.mjs');
+  const validator = await readFile(validatorPath, 'utf8');
+  const bundledValidator = validator.replace("import Ajv from 'ajv';", "import Ajv from '../../vendor/ajv.mjs';");
+  if (bundledValidator === validator) throw new Error('Ajv import projection was not applied');
+  await writeFile(validatorPath, bundledValidator);
   await chmod(path.join(output, 'bin/daren-ui-distill.mjs'), 0o755);
 
-  return { status: 'built', platform, output, skills: packagedSkills, productionDependencies: [...seen].sort() };
+  return { status: 'built', platform, output, skills: packagedSkills, productionDependencies };
 }
