@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mindex.local/schemas/design-asset-registrar/adapter-manifest.schema.json",
+  "$id": "https://daren.design/schemas/ui-distill/adapter-manifest.schema.json",
   "title": "Design Asset Registrar Host Adapter Manifest",
   "type": "object",
   "additionalProperties": false,

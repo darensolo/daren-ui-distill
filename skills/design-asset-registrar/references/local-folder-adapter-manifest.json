@@ -1,0 +1,13 @@
+{
+  "host": "local-folder",
+  "allowedCapabilities": [
+    "registry",
+    "evidenceStore"
+  ],
+  "evidenceRoot": ".ui-distill/evidence",
+  "forbiddenCapabilities": [
+    "externalBusinessSystems",
+    "privateManualQueue",
+    "localHiddenService"
+  ]
+}

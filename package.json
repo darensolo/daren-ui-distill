@@ -9,13 +9,14 @@
     "node": ">=24.20 <26"
   },
   "scripts": {
-    "test": "pnpm verify:public-candidate && pnpm test:contracts && pnpm test:core && pnpm test:adapter && pnpm test:cli && pnpm test:plugins",
+    "test": "pnpm verify:public-candidate && pnpm test:contracts && pnpm test:core && pnpm test:adapter && pnpm test:cli && pnpm test:plugins && pnpm test:example",
     "verify:public-candidate": "node scripts/verify-public-candidate.mjs",
     "test:contracts": "node --test packages/contracts/contracts.test.mjs",
     "test:core": "node --test packages/core/tests/*.test.mjs",
     "test:adapter": "node --test adapters/local-folder/local-folder.test.mjs",
     "test:cli": "node --test packages/cli/cli.test.mjs",
     "test:plugins": "node --test plugins/codex/tests/distribution.test.mjs plugins/qoder/tests/distribution.test.mjs",
+    "test:example": "node --test examples/synthetic/isolated-consumer/consumer.test.mjs",
     "build:codex": "node build.mjs --target codex --out dist/codex",
     "build:qoder": "node build.mjs --target qoder --out dist/qoder"
   },

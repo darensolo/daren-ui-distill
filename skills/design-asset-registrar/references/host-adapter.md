@@ -4,7 +4,20 @@ Design Asset Registrar can depend on design-system host capabilities and Agent c
 
 ## Manifest
 
-Each host provides an adapter manifest that conforms to `schemas/adapter-manifest.schema.json`.
+Each host provides an adapter manifest that conforms to `schemas/adapter-manifest.schema.json`. If no design-system-specific manifest is present, use the bundled `local-folder` adapter; do not block a portable register/publish demonstration merely because Daren Design is absent.
+
+Bundled reference host manifest: `references/local-folder-adapter-manifest.json`.
+
+```json
+{
+  "host": "local-folder",
+  "allowedCapabilities": ["registry", "evidenceStore"],
+  "evidenceRoot": ".ui-distill/evidence",
+  "forbiddenCapabilities": ["externalBusinessSystems", "privateManualQueue", "localHiddenService"]
+}
+```
+
+The reference adapter defaults to `.ui-distill/library` and `.ui-distill/site`. It accepts only validated adapted L2 component AssetPackages, requires separate persisted `library-write` and `site-write` authorizations, and emits separate RegistrationReceipt and PublicationReceipt files.
 
 Daren Design default:
 
@@ -53,4 +66,4 @@ Its name is historical: registrar consumption is limited to registration asserti
 
 ## Migration Rule
 
-When moving Design Asset Registrar to another design system, replace the manifest and adapter mappings. Do not change workflow semantics or copy host-specific contracts into the skill.
+When moving Design Asset Registrar to another design system, replace the manifest and adapter mappings. Do not change workflow semantics or copy host-specific contracts into the skill. Adapter selection order is explicit host manifest first, bundled `local-folder` fallback second.

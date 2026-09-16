@@ -30,6 +30,7 @@ Daren Design-specific Registry and Astro publication adapters are not part of th
 
 ```bash
 pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
 pnpm test
 ```
 

@@ -5,6 +5,7 @@ This **E2E_FIXTURE_ONLY** harness copies only files declared by an AssetPackage,
 Run the browser check from the repository root:
 
 ```bash
+pnpm exec playwright install chromium
 node --test examples/synthetic/isolated-consumer/consumer.test.mjs
 ```
 

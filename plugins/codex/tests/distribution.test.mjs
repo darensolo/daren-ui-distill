@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import Ajv2020 from 'ajv/dist/2020.js';
 import { digestObject } from '../../../packages/core/digest.mjs';
 
 const toolRoot = fileURLToPath(new URL('../../..', import.meta.url));
@@ -45,8 +46,13 @@ test('canonical skills route explicit and natural-language intents without widen
   const publisher = await readFile(path.join(repoRoot, 'skills/design-asset-publisher/SKILL.md'), 'utf8');
   assert.match(registrar, /RegistrationReceipt/);
   assert.match(registrar, /NATIVE_CANDIDATE_REGISTRATION_UNSUPPORTED/);
-  assert.match(registrar, /must never copy it into `src\/distilled`/);
+  assert.match(registrar, /must never copy native source into `src\/distilled`/);
+  assert.match(registrar, /local-folder/);
   assert.match(publisher, /never registers assets or deploys publicly/i);
+  assert.match(publisher, /local-folder/);
+  const adapterSchema = JSON.parse(await readFile(path.join(repoRoot, 'skills/design-asset-registrar/schemas/adapter-manifest.schema.json'), 'utf8'));
+  const localAdapter = JSON.parse(await readFile(path.join(repoRoot, 'skills/design-asset-registrar/references/local-folder-adapter-manifest.json'), 'utf8'));
+  assert.equal(new Ajv2020({ strict: true }).compile(adapterSchema)(localAdapter), true);
 });
 
 test('build is deterministic and built package self-checks with version parity', async (t) => {

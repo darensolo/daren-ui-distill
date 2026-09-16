@@ -5,15 +5,15 @@ import path from 'node:path';
 import test from 'node:test';
 import { chromium } from '@playwright/test';
 
-import { digestObject } from '../../core/digest.mjs';
-import { generateSourceReplica } from '../../core/generator.mjs';
+import { digestObject } from '../../../packages/core/digest.mjs';
+import { generateSourceReplica } from '../../../packages/core/generator.mjs';
 import { prepareConsumer, startConsumerServer } from './consumer.mjs';
 import { consumerViewports } from './playwright.config.mjs';
 
 test('copied public package renders at three widths and exposes click and keyboard state changes', async (t) => {
   const root = await mkdtemp(path.join(tmpdir(), 'dh05-consumer-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  const valid = JSON.parse(await readFile(new URL('../../schemas/fixtures/valid.json', import.meta.url), 'utf8'));
+  const valid = JSON.parse(await readFile(new URL('../../../packages/contracts/fixtures/valid.json', import.meta.url), 'utf8'));
   const blueprint = structuredClone(valid.cases.find((entry) => entry.name === 'blueprint-generation-ready').value);
   blueprint.layout[0].values = { ...blueprint.layout[0].values, padding: 8, width: '100%' };
   blueprint.states.push({ ...blueprint.states[0], id: 'expanded' });

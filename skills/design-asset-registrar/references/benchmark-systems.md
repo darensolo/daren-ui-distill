@@ -4,7 +4,7 @@
 
 Two different lists, do not conflate them:
 
-- **Research roster (this menu)** — the systems an audit *may and should* consider, by relevance to the asset. Source: the harness/layout benchmark report `docs/mindex-agentos/research/design-harness-layout-design-system-benchmark-2026-06-19.md`. Pick the systems where the asset (or an adjacent pattern) actually exists; you are not required to cover all of them.
+- **Research roster (this menu)** — the systems an audit *may and should* consider, by relevance to the asset. The roster below is self-contained; pick the systems where the asset (or an adjacent pattern) actually exists and do not assume a host-private research file exists.
 - **Required floor (machine gate)** — the minimum every benchmark audit evidence MUST satisfy to pass `benchmark-audit:check`. Owned by `scripts/benchmark-audit-check.mjs` (`MIN_SYSTEMS`): a count floor of **at least 3 systems**, matching the current host benchmark standard. The gate is count-based, not a fixed name set — pick the 3+ systems by relevance to the asset. Raising the floor would not break existing evidence (all carry ≥3), but lowering below 3 or pinning specific names is a deliberate host-contract change.
 
 Cover at least 3 relevant systems; add more roster systems whenever they are better evidence for the specific asset.
