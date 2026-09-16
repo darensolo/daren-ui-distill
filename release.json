@@ -2,11 +2,11 @@
   "schemaVersion": "1.0.0",
   "toolId": "daren-ui-distill",
   "displayName": "Daren UI Distiller",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "contracts": {
-    "schema": "1.0.1",
-    "core": "0.2.1",
-    "plugin": "0.2.1"
+    "schema": "1.0.2",
+    "core": "0.2.2",
+    "plugin": "0.2.2"
   },
   "runtime": {
     "moduleFormat": "esm",

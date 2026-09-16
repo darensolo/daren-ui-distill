@@ -49,6 +49,21 @@ test('local-folder adapter registers and publishes with separate receipts and id
   assert.notEqual(published.receipt.digest, registered.receipt.digest);
   assert.equal(published.receipt.route, `/assets/${slug}/`);
   assert.equal((await stat(path.join(baseDir, siteTarget, 'publication.json'))).isFile(), true);
+  const hostPublication = structuredClone(published.receipt);
+  hostPublication.route = `/components/${slug}/`;
+  hostPublication.previewRoute = `/distilled/${slug}.html`;
+  assert.equal(validateContract('publication-receipt', hostPublication).valid, true);
+  for (const [route, previewRoute] of [
+    [`/components/../${slug}/`, `/distilled/${slug}.html`],
+    [`/Components/${slug}/`, `/distilled/${slug}.html`],
+    [`/components/${slug}/?draft=1`, `/distilled/${slug}.html`],
+    [`/components/${slug}/`, `/distilled/../${slug}.html`],
+    [`/components/${slug}/`, `/distilled/${slug}.html?draft=1`],
+  ]) {
+    hostPublication.route = route;
+    hostPublication.previewRoute = previewRoute;
+    assert.equal(validateContract('publication-receipt', hostPublication).valid, false, `${route} ${previewRoute}`);
+  }
 
   const registeredAgain = await registerLocalAsset({ bundle, approval: registrationApproval, baseDir });
   const publishedAgain = await publishLocalAsset({ registrationReceipt: registered.receipt, metadata, approval: publicationApproval, baseDir });

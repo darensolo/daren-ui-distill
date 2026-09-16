@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2 — 2026-09-16
+
+- Made publication and preview routes host-neutral while retaining traversal-safe URL path patterns.
+- Added conformance coverage for both reference and Daren Design routes plus traversal, case and query-string rejection.
+
 ## 0.2.1 — 2026-09-16
 
 - Made `RegistrationReceipt.publicEntry` host-neutral while retaining a traversal-safe package-subpath pattern.

@@ -11,8 +11,8 @@
     "assetRef": { "$ref": "common.schema.json#/$defs/ref" },
     "registrationReceiptRef": { "$ref": "common.schema.json#/$defs/ref" },
     "projectionRef": { "$ref": "common.schema.json#/$defs/ref" },
-    "route": { "type": "string", "pattern": "^/assets/[a-z][a-z0-9-]*/$" },
-    "previewRoute": { "type": "string", "pattern": "^/previews/[a-z][a-z0-9-]*\\.html$" },
+    "route": { "type": "string", "pattern": "^/(?:[a-z][a-z0-9-]*/)+$" },
+    "previewRoute": { "type": "string", "pattern": "^/(?:[a-z][a-z0-9-]*/)*[a-z][a-z0-9-]*\\.html$" },
     "visibility": { "enum": ["listed", "unlisted"] },
     "deploymentStatus": { "const": "not-requested" },
     "files": {
