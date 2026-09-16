@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Local-first UI decomposition, replication, Daren adaptation, asset registration, site publication, and bounded audit/repair skills.",
   "author": { "name": "Darren" },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "keywords": ["ui", "blueprint", "replication", "design-system", "audit"],
   "skills": "./skills/",
   "interface": {

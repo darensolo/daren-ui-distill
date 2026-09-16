@@ -8,8 +8,8 @@ Node `>=24.20 <26` is required. From the repository root:
 
 ```bash
 node build.mjs --target codex --out /tmp/daren-ui-distill-codex
-node /tmp/daren-ui-distill/scripts/self-check.mjs
-node /tmp/daren-ui-distill/bin/daren-ui-distill.mjs check --json
+node /tmp/daren-ui-distill-codex/scripts/self-check.mjs
+node /tmp/daren-ui-distill-codex/bin/daren-ui-distill.mjs check --json
 ```
 
 The output directory must not already exist. Repeating the build into two new directories produces byte-identical package trees.

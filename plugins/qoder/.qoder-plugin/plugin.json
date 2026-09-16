@@ -5,7 +5,7 @@
   "description": "Distill authorized UI sources into validated, Daren-adapted, registered, and locally published design assets.",
   "descriptionZh": "把已授权 UI 来源蒸馏为经过校验、Daren 适配、入库并可在本地设计站上架的资产。",
   "author": { "name": "Darren" },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "keywords": ["qoder-plugin", "ui", "design-system", "distillation"],
   "category": "developer-tools",
   "tags": ["ui", "design-system", "workflow"],

@@ -68,6 +68,9 @@ test('build is deterministic and built package self-checks with version parity',
   const manifest = JSON.parse(await readFile(path.join(first, '.codex-plugin/plugin.json'), 'utf8'));
   const release = JSON.parse(await readFile(path.join(first, 'runtime/release.json'), 'utf8'));
   assert.equal(manifest.version, release.contracts.plugin);
+  assert.equal(manifest.license, 'Apache-2.0');
+  await access(path.join(first, 'LICENSE'));
+  assert.match(await readFile(path.join(first, 'THIRD_PARTY_NOTICES.md'), 'utf8'), /Ajv 8\.20\.0[\s\S]+fast-uri 3\.1\.8/);
   await access(path.join(first, 'runtime/vendor/ajv.mjs'));
   await assert.rejects(access(path.join(first, 'node_modules')), /ENOENT/);
   const check = spawnSync(process.execPath, [path.join(first, 'scripts/self-check.mjs')], { encoding: 'utf8' });

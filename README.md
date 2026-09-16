@@ -61,4 +61,4 @@ Build outputs contain the six canonical skills and a bundled runtime. They do no
 
 ## License and contributions
 
-Licensed under [Apache-2.0](LICENSE). See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and evidence-safety expectations and [SECURITY.md](SECURITY.md) for vulnerability reporting.
+Licensed under [Apache-2.0](LICENSE). Bundled dependency licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and evidence-safety expectations and [SECURITY.md](SECURITY.md) for vulnerability reporting.

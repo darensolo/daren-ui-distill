@@ -8,8 +8,8 @@ Node `>=24.20 <26` is required. From the repository root:
 
 ```bash
 node build.mjs --target qoder --out /tmp/daren-ui-distill-qoder
-node /tmp/daren-ui-distill/scripts/self-check.mjs
-node /tmp/daren-ui-distill/bin/daren-ui-distill.mjs check --json
+node /tmp/daren-ui-distill-qoder/scripts/self-check.mjs
+node /tmp/daren-ui-distill-qoder/bin/daren-ui-distill.mjs check --json
 ```
 
 The output directory must not already exist. Import the built directory as a local plugin from Qoder's plugin management UI. Do not import `plugins/qoder` directly: it intentionally omits generated runtime and skill projections.

@@ -17,4 +17,4 @@ Do not include accounts, credentials, cookies, tokens, private sessions, or unre
 
 ## Reporting
 
-Do not publish suspected vulnerabilities. Use GitHub's private vulnerability reporting for this repository. If that feature is unavailable, contact the repository owner privately through the GitHub profile rather than opening a public issue.
+Do not publish suspected vulnerabilities. Use the repository's **Security → Report a vulnerability** flow; private vulnerability reporting is enabled for this project. If that control is unexpectedly unavailable, open a public issue containing only the words “private vulnerability reporting unavailable” and no vulnerability details so the maintainer can restore the private channel.
