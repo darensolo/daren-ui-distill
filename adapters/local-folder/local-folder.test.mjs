@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 
+import { validateContract } from '../../packages/contracts/validate.mjs';
 import { createDeliveryAuthorization } from '../../packages/core/authorization.mjs';
 import { digestObject } from '../../packages/core/digest.mjs';
 import { generateAdaptedAsset, generateSourceReplica } from '../../packages/core/generator.mjs';
@@ -29,6 +30,13 @@ test('local-folder adapter registers and publishes with separate receipts and id
   const registered = await registerLocalAsset({ bundle, approval: registrationApproval, baseDir });
   assert.equal(registered.receipt.kind, 'registration-receipt');
   assert.equal((await stat(path.join(baseDir, libraryTarget, 'registration.json'))).isFile(), true);
+  const hostReceipt = structuredClone(registered.receipt);
+  hostReceipt.publicEntry = `./distilled/${slug}`;
+  assert.equal(validateContract('registration-receipt', hostReceipt).valid, true);
+  for (const publicEntry of [`../distilled/${slug}`, `./distilled/../${slug}`, `./Distilled/${slug}`]) {
+    hostReceipt.publicEntry = publicEntry;
+    assert.equal(validateContract('registration-receipt', hostReceipt).valid, false, publicEntry);
+  }
 
   const metadata = { title: 'Fixture component', description: 'Synthetic local publication.', category: 'Fixture', visibility: 'listed' };
   const siteTarget = `.ui-distill/site/publications/${slug}`;
