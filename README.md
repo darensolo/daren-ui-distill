@@ -26,6 +26,8 @@ This repository is the public source of truth for Daren UI Distill. It is licens
 
 Daren Design-specific Registry and Astro publication adapters are not part of this repository. They consume the public contracts from the Daren Design side.
 
+Host-specific Library/Site adapters must import the supported bridge from `daren-ui-distill/adapter-kit`; internal `packages/` paths are not public API. The exported contract fixture exists for conformance tests only.
+
 ## Local verification
 
 ```bash
