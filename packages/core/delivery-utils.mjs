@@ -34,6 +34,7 @@ export async function requireApproval({ approval, capability, baseDir, targetRoo
   if (approval?.approved !== true || !approval.capabilities?.includes(capability) || !approval.ref) {
     fail('APPROVAL_REQUIRED', `${capability} requires an explicit approval reference`);
   }
+  if (approval.ref.kind !== 'authorization') fail('INVALID_AUTHORIZATION', `${capability} approval ref must be an authorization`);
   const authorizationFile = await resolveWithin(baseDir, 'authorizations', approval.ref.relativePath);
   const bytes = await readFile(authorizationFile);
   if (sha256Bytes(bytes) !== approval.ref.digest) fail('AUTHORIZATION_DIGEST_MISMATCH', `${capability} authorization bytes do not match the approval ref`);
@@ -48,7 +49,11 @@ export async function requireApproval({ approval, capability, baseDir, targetRoo
     || authorization.subjectRevision !== subjectRevision || authorization.inputDigest !== inputDigest) {
     fail('AUTHORIZATION_SCOPE_MISMATCH', `${capability} authorization is not bound to ${subjectId} at ${targetRoot}`);
   }
-  if (authorization.expiresAt && Date.parse(authorization.expiresAt) <= Date.now()) fail('AUTHORIZATION_EXPIRED', `${capability} authorization expired`);
+  if (authorization.expiresAt) {
+    const expiresAt = Date.parse(authorization.expiresAt);
+    if (Number.isNaN(expiresAt)) fail('INVALID_AUTHORIZATION', `${capability} authorization expiry is invalid`);
+    if (expiresAt <= Date.now()) fail('AUTHORIZATION_EXPIRED', `${capability} authorization expired`);
+  }
   return structuredClone(approval.ref);
 }
 

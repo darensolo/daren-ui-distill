@@ -1,13 +1,14 @@
 {
   "name": "daren-ui-distill",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "license": "Apache-2.0",
   "description": "Local-first UI decomposition, replication, adaptation, registration, publication, and bounded audit tooling.",
   "type": "module",
   "exports": {
     "./adapter-kit": "./packages/core/adapter-kit.mjs",
-    "./contracts/fixtures/valid.json": "./packages/contracts/fixtures/valid.json"
+    "./contracts/fixtures/valid.json": "./packages/contracts/fixtures/valid.json",
+    "./release.json": "./release.json"
   },
   "engines": {
     "node": ">=24.20 <26"

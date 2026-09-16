@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 — 2026-09-16
+
+- Exported shared authorization, path-scope, receipt and publication helpers through the public adapter kit so host adapters do not fork delivery semantics.
+- Exported `release.json` as the versioned release projection consumed by host product pages.
+- Tightened approval validation for reference kind and malformed authorization expiry.
+
 ## 0.2.2 — 2026-09-16
 
 - Made publication and preview routes host-neutral while retaining traversal-safe URL path patterns.
