@@ -2,7 +2,7 @@
 
 ## Supported version
 
-The repository is currently a local release candidate and has no supported public release.
+Security fixes are provided for the latest tagged release. Older releases may receive fixes at the maintainer's discretion.
 
 ## Security boundaries
 
@@ -17,4 +17,4 @@ Do not include accounts, credentials, cookies, tokens, private sessions, or unre
 
 ## Reporting
 
-Until a public security contact is configured, do not publish suspected vulnerabilities. Report them privately to the repository owner.
+Do not publish suspected vulnerabilities. Use GitHub's private vulnerability reporting for this repository. If that feature is unavailable, contact the repository owner privately through the GitHub profile rather than opening a public issue.

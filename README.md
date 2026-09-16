@@ -4,7 +4,7 @@ Daren UI Distill is a local-first pipeline for turning authorized UI evidence in
 
 ## Current status
 
-This directory is a **local open-source candidate**, extracted from Mindex-Next by an explicit allowlist. No public remote or release has been created yet. The candidate intentionally uses `UNLICENSED` until the project owner selects the public license.
+This repository is the public source of truth for Daren UI Distill. It is licensed under Apache-2.0 and distributed as source plus local Codex and Qoder plugin builders. `private: true` in `package.json` prevents accidental npm publication; it does not limit use of the public repository.
 
 ## Six task skills
 
@@ -29,6 +29,8 @@ Daren Design-specific Registry and Astro publication adapters are not part of th
 ## Local verification
 
 ```bash
+git clone https://github.com/darensolo/daren-ui-distill.git
+cd daren-ui-distill
 pnpm install --frozen-lockfile
 pnpm exec playwright install chromium
 pnpm test
@@ -41,6 +43,20 @@ node build.mjs --target codex --out /tmp/daren-ui-distill-codex
 node build.mjs --target qoder --out /tmp/daren-ui-distill-qoder
 ```
 
-## Public release hold
+## Plugin installation
 
-Before the first public release, choose a license, complete provenance review, create the GitHub remote, replace candidate links, and repeat the fresh-clone verification. Those are deliberate Human authorization points.
+Build a self-contained host package, run its self-check, and import the resulting directory through the host's local plugin flow:
+
+```bash
+pnpm build:codex
+node dist/codex/scripts/self-check.mjs
+
+pnpm build:qoder
+node dist/qoder/scripts/self-check.mjs
+```
+
+Build outputs contain the six canonical skills and a bundled runtime. They do not deploy a public website, upload captured evidence, or enable telemetry.
+
+## License and contributions
+
+Licensed under [Apache-2.0](LICENSE). See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and evidence-safety expectations and [SECURITY.md](SECURITY.md) for vulnerability reporting.

@@ -2,7 +2,7 @@
   "name": "daren-ui-distill",
   "version": "0.2.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "description": "Local-first UI decomposition, replication, adaptation, registration, publication, and bounded audit tooling.",
   "type": "module",
   "engines": {
