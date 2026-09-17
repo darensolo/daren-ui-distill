@@ -5,7 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 import { generateSourceReplica } from '../generator.mjs';
-import { auditAsset, isReportFresh, verifyAuditEvidence } from '../quality.mjs';
+import { auditAsset, compareAuditReports, isReportFresh, verifyAuditEvidence } from '../quality.mjs';
 import { digestObject, sha256Bytes } from '../digest.mjs';
 
 const fixtures = JSON.parse(await readFile(new URL('../../contracts/fixtures/valid.json', import.meta.url), 'utf8'));
@@ -146,4 +146,53 @@ test('profile context paths are scoped and their on-disk bytes are verified', as
   assert.throws(() => auditAsset(request), (error) => error.code === 'CONTEXT_DIGEST_MISMATCH');
   await rm(path.join(root, 'baselines/source.json'));
   assert.throws(() => auditAsset(request), (error) => error.code === 'CONTEXT_ARTIFACT_UNAVAILABLE');
+});
+
+
+test('audit comparison distinguishes resolved, persisting, new, and not-rechecked findings', () => {
+  const checksetDigest = 'e'.repeat(64);
+  const base = generateSourceReplica(blueprint);
+  const previousBundle = structuredClone(base);
+  const component = previousBundle.files.find((file) => file.relativePath === 'component.js');
+  component.content += '\n// drift';
+  const previous = auditAsset({ bundle: previousBundle, checksetDigest });
+  assert.deepEqual(previous.findings.map((finding) => finding.id), ['finding-file-digests']);
+  assert.equal(previous.mode, 'audit-only');
+
+  const persistingBundle = structuredClone(previousBundle);
+  persistingBundle.assetPackage.files.push({ relativePath: 'extra.txt', digest: 'a'.repeat(64) });
+  const persisting = auditAsset({ bundle: persistingBundle, checksetDigest, previousReport: previous });
+  assert.deepEqual(persisting.comparison, {
+    status: 'compared',
+    previousSubjectRef: previous.subjectRef,
+    resolved: [],
+    persisting: ['finding-file-digests'],
+    new: ['finding-file-set'],
+    notRechecked: [],
+  });
+
+  const resolved = auditAsset({ bundle: base, checksetDigest, previousReport: previous });
+  assert.deepEqual(resolved.comparison.resolved, ['finding-file-digests']);
+  assert.deepEqual(resolved.comparison.persisting, []);
+  assert.deepEqual(resolved.comparison.new, []);
+
+  const notRecheckedReport = structuredClone(resolved);
+  notRecheckedReport.checks = notRecheckedReport.checks.filter((check) => check.id !== 'file-digests');
+  assert.deepEqual(compareAuditReports(previous, notRecheckedReport).notRechecked, ['finding-file-digests']);
+});
+
+test('audit comparison refuses stale or incompatible report pairs', () => {
+  const checksetDigest = 'e'.repeat(64);
+  const report = auditAsset({ bundle: generateSourceReplica(blueprint), checksetDigest });
+  const stale = structuredClone(report);
+  stale.freshness.status = 'stale';
+  assert.equal(compareAuditReports(stale, report).reason, 'previous-report-not-fresh');
+
+  const differentCheckset = structuredClone(report);
+  differentCheckset.checksetDigest = 'f'.repeat(64);
+  assert.equal(compareAuditReports(report, differentCheckset).reason, 'checkset-changed');
+
+  const differentSubject = structuredClone(report);
+  differentSubject.subjectRef.id = 'other-asset';
+  assert.equal(compareAuditReports(report, differentSubject).reason, 'subject-changed');
 });

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fidelity-report",
+  "artifact": "chatgpt-public-home-source-replica",
+  "source": "https://chatgpt.com/",
+  "state": "public-logged-out",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "theme": "light",
+  "locale": "en-US",
+  "result": "partial",
+  "claim": "high-fidelity runnable Source Replica; pixel parity is not verified",
+  "governanceRef": null,
+  "gates": [
+    {
+      "id": "source-live-content",
+      "type": "manual",
+      "status": "pass",
+      "evidenceRef": "evidence/source-observation.json",
+      "note": "Current public accessibility content and official help guidance were observed."
+    },
+    {
+      "id": "source-pixel-baseline",
+      "type": "manual",
+      "status": "blocked",
+      "evidenceRef": "evidence/source-observation.json",
+      "note": "Ephemeral Chromium navigation failed with net::ERR_TIMED_OUT; no login or bypass was attempted."
+    },
+    {
+      "id": "candidate-structure",
+      "type": "machine",
+      "status": "pass",
+      "evidenceRef": "tests/verify.mjs",
+      "commandsRun": [
+        "node artifacts/chatgpt-source-replica/tests/verify.mjs"
+      ],
+      "note": "26 bound buttons, 37 unique ids, required labels, responsive rules and accessibility primitives verified."
+    },
+    {
+      "id": "candidate-visual",
+      "type": "manual",
+      "status": "pass",
+      "evidenceRef": "evidence/candidate-1440x900.png",
+      "note": "1440 × 900 initial state reviewed after correcting hidden-state CSS precedence."
+    },
+    {
+      "id": "interaction-matrix",
+      "type": "manual",
+      "status": "pass",
+      "evidenceRef": "tests/interaction-smoke.mjs",
+      "commandsRun": [
+        "node artifacts/chatgpt-source-replica/tests/interaction-smoke.mjs"
+      ],
+      "note": "Desktop controls, overlays, local conversation, auth gate, mobile sidebar and zero-console-error path passed."
+    },
+    {
+      "id": "responsive-shell",
+      "type": "manual",
+      "status": "pass",
+      "evidenceRef": "tests/interaction-smoke.mjs",
+      "note": "Desktop 1440 × 900 and mobile 390 × 844 shell states verified."
+    },
+    {
+      "id": "design-system-adaptation",
+      "type": "machine",
+      "status": "n/a",
+      "evidenceRef": "plan.md",
+      "note": "Explicit source-only request; no Daren adaptation was performed."
+    }
+  ],
+  "gaps": [
+    "No same-state source screenshot or computed-style export was available for pixel-diff calibration.",
+    "Icons are local line-art approximations because current source SVG paths were not captured.",
+    "Authentication, uploads, voice, plugins, saved history and OpenAI inference are local placeholders only.",
+    "Authenticated and personalized ChatGPT states are out of scope."
+  ]
+}

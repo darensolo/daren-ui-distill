@@ -118,6 +118,54 @@ function baselineAssertionsMatch(bundle, bytes) {
   return { structure, visual };
 }
 
+const emptyComparison = (reason) => ({
+  status: 'not-comparable', reason,
+  resolved: [], persisting: [], new: [], notRechecked: [],
+});
+
+const findingCheckId = (finding) => finding.checkId ?? finding.id?.replace(/^finding-/, '');
+
+export function compareAuditReports(previousReport, currentReport) {
+  if (previousReport?.freshness?.status !== 'fresh') return emptyComparison('previous-report-not-fresh');
+  if (previousReport?.subjectRef?.kind !== currentReport?.subjectRef?.kind
+    || previousReport?.subjectRef?.id !== currentReport?.subjectRef?.id) return emptyComparison('subject-changed');
+  if (previousReport?.profile !== currentReport?.profile) return emptyComparison('profile-changed');
+  if (previousReport?.checksetDigest !== currentReport?.checksetDigest) return emptyComparison('checkset-changed');
+
+  const previousFindings = (previousReport.findings ?? []).filter((finding) => finding.status === 'open');
+  const currentFindings = (currentReport.findings ?? []).filter((finding) => finding.status === 'open');
+  const previousIds = previousFindings.map((finding) => finding.id);
+  const currentIds = currentFindings.map((finding) => finding.id);
+  if (new Set(previousIds).size !== previousIds.length || new Set(currentIds).size !== currentIds.length) {
+    return emptyComparison('duplicate-finding-id');
+  }
+
+  const currentById = new Map(currentFindings.map((finding) => [finding.id, finding]));
+  const previousById = new Map(previousFindings.map((finding) => [finding.id, finding]));
+  const currentChecks = new Map((currentReport.checks ?? []).map((check) => [check.id, check.status]));
+  const resolved = [];
+  const persisting = [];
+  const notRechecked = [];
+  for (const finding of previousFindings) {
+    if (currentById.has(finding.id)) {
+      persisting.push(finding.id);
+      continue;
+    }
+    const status = currentChecks.get(findingCheckId(finding));
+    if (status === 'passed') resolved.push(finding.id);
+    else notRechecked.push(finding.id);
+  }
+  const introduced = currentFindings.filter((finding) => !previousById.has(finding.id)).map((finding) => finding.id);
+  return {
+    status: 'compared',
+    previousSubjectRef: structuredClone(previousReport.subjectRef),
+    resolved: resolved.sort(),
+    persisting: persisting.sort(),
+    new: introduced.sort(),
+    notRechecked: notRechecked.sort(),
+  };
+}
+
 export function auditAsset({
   bundle,
   profile = 'common',
@@ -126,6 +174,7 @@ export function auditAsset({
   allowedDeltaContext = na('profile has no allowed-delta contract'),
   contextArtifacts = {},
   checksetDigest,
+  previousReport,
 }) {
   if (profile === 'source-fidelity' && baselineContext.status !== 'available') fail('MISSING_BASELINE', 'source-fidelity requires an available source baseline');
   if (profile === 'design-adaptation' && [baselineContext, targetContext, allowedDeltaContext].some((context) => context.status !== 'available')) fail('MISSING_TARGET_CONTEXT', 'design-adaptation requires available baseline, target, and allowed-delta contexts');
@@ -148,12 +197,12 @@ export function auditAsset({
     ['baseline-visual-contract', baselineMatches.visual ? 'passed' : 'failed', profile !== 'common'],
     ['runtime-evidence', bundle.runtimeVerification === 'verified' ? 'passed' : 'unknown', profile === 'source-fidelity'],
   ].map(([id, status, mandatory]) => ({ id, status, mandatory, evidenceRefs: ['passed', 'failed'].includes(status) ? [auditEvidence(bundle, id, status)] : [] }));
-  const findings = checks.filter((check) => check.status === 'failed').map((check) => ({ id: `finding-${check.id}`, severity: 'P1', status: 'open', subjectRef: { kind: 'asset-package', id: bundle.assetPackage.assetId, revision: bundle.assetPackage.revision, digest: bundle.bundleDigest, relativePath: `assets/${bundle.assetPackage.assetId}/asset-package.json` } }));
+  const findings = checks.filter((check) => check.status === 'failed').map((check) => ({ id: `finding-${check.id}`, checkId: check.id, severity: 'P1', status: 'open', subjectRef: { kind: 'asset-package', id: bundle.assetPackage.assetId, revision: bundle.assetPackage.revision, digest: bundle.bundleDigest, relativePath: `assets/${bundle.assetPackage.assetId}/asset-package.json` } }));
   const qualityOutcome = checks.some((check) => check.status === 'failed') ? 'blocked'
     : checks.some((check) => check.mandatory && ['unknown', 'unsupported'].includes(check.status)) ? 'residual' : 'passed';
   const inputDigests = [...new Set([bundle.bundleDigest, checksetDigest, ...contextDigests(baselineContext, targetContext, allowedDeltaContext)])];
   const report = {
-    schemaVersion: '1.0.0', kind: 'fidelity-report',
+    schemaVersion: '1.0.0', kind: 'fidelity-report', mode: 'audit-only',
     subjectRef: { kind: 'asset-package', id: bundle.assetPackage.assetId, revision: bundle.assetPackage.revision, digest: bundle.bundleDigest, relativePath: `assets/${bundle.assetPackage.assetId}/asset-package.json` },
     profile,
     profileRef: { kind: 'quality-profile', id: profile, revision: 1, digest: digestObject({ profile }), relativePath: `profiles/${profile}.json` },
@@ -162,6 +211,7 @@ export function auditAsset({
     runtimeVerification: bundle.runtimeVerification ?? 'unverified',
     runtimeEvidenceGaps: structuredClone(bundle.runtimeEvidenceGaps ?? []),
   };
+  if (previousReport) report.comparison = compareAuditReports(previousReport, report);
   const result = validateContract('quality', report);
   if (!result.valid) fail('INVALID_QUALITY_REPORT', JSON.stringify(result.errors));
   return report;

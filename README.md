@@ -3,10 +3,10 @@
 **Turn authorized UI evidence into inspectable, adaptable design assets — locally.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v0.3.0--next-6b5ce7)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v0.4.0-6b5ce7)](CHANGELOG.md)
 [![Node](https://img.shields.io/badge/node-%3E%3D24.20%20%3C26-3c873a)](package.json)
 
-UI Distiller is a local-first pipeline that decomposes authorized UI sources — installed-app archives, asset directories, saved evidence bundles — into Blueprints, faithful Source Replicas, and design-system-adapted assets. Every stage keeps its own evidence and receipts, so each effect can be reviewed, retried, or rolled back. It ships as local plugins for Codex Desktop and Qoder IDE. Product page: [daren.design/distiller](https://www.daren.design/distiller/).
+UI Distiller is a local-first pipeline that decomposes authorized UI sources — installed-app archives, asset directories, saved evidence bundles, and public HTTPS pages — into Blueprints, faithful Source Replicas, and design-system-adapted assets. Every stage keeps its own evidence and receipts, so each effect can be reviewed, retried, or rolled back. It ships as local plugins for Codex Desktop and Qoder IDE. Product page: [daren.design/distiller](https://www.daren.design/distiller/).
 
 ## Highlights
 
@@ -19,7 +19,7 @@ UI Distiller is a local-first pipeline that decomposes authorized UI sources —
 
 ## Quick start
 
-Requirements: macOS (Apple Silicon or Intel) · Node.js >= 24.20 < 26 · pnpm.
+Requirements: macOS (Apple Silicon or Intel) · Node.js >= 24.20 < 26 · pnpm · an installed Chrome, Chromium, Edge, or Brave executable for web capture.
 
 ```bash
 git clone https://github.com/darensolo/ui-distiller.git
@@ -32,6 +32,25 @@ node dist/codex/scripts/self-check.mjs
 ```
 
 Then import the `dist/codex` (or `dist/qoder`) directory through your host's local plugin flow — see [plugins/codex/README.md](plugins/codex/README.md) or [plugins/qoder/README.md](plugins/qoder/README.md). Build outputs contain the six canonical skills and a bundled runtime; they do not deploy a public website, upload captured evidence, or enable telemetry.
+
+After installing or upgrading, start a new host conversation so skill discovery refreshes. You can begin with a goal in ordinary language; you do not need to name a skill:
+
+| Goal | Example request |
+| --- | --- |
+| Capture a public web page | “Capture https://example.com at 1440×900, then decompose it into a page Blueprint.” |
+| Inspect a local UI without changing it | “Inspect this local page, report the UI problems, and do not modify source files.” |
+| Decompose supported evidence | “Analyze this supported source into its structure, components, states, and unknowns only.” |
+| Replicate from a valid Blueprint | “Build and retain a Source Replica from this Blueprint; do not adapt it yet.” |
+| Continue from an audit | “Repair only the P1 findings in this report, then re-audit the affected states.” |
+
+An audit begins by stating that `audit-only` is read-only for the inspected subject. Repair requires explicit user intent and scope; registration and publication remain separately approved effects.
+
+A built package can capture a public page and materialize its evidence locally:
+
+```bash
+printf '%s' '{"source":{"kind":"web-url","url":"https://example.com/"},"viewport":{"width":1440,"height":900}}' \
+  | node dist/codex/bin/ui-distiller.mjs capture --base-dir "$PWD" --out-dir captures/example --json
+```
 
 To run the full local verification suite:
 
@@ -61,7 +80,16 @@ Audit is a cross-cutting, read-only action over any stage. Contracts and Core ar
 
 ## Capability boundary
 
-Supported sources today: installed-app / application archives (`codex-macos-asar`), declared ESM asset directories, and evidence bundles (static, screenshot, accessibility, interaction, computed-style). Explicitly out of scope for v0.3.0: generic web-URL capture, public deployment, and any telemetry. The machine-readable boundary is [release.json](release.json); security invariants (read-only source, per-write approval, fail-closed preview isolation) are enforced in Core.
+The machine-readable source of truth is [release.json](release.json):
+
+| Input | Status | Notes |
+| --- | --- | --- |
+| Installed app / application archive | Supported | `codex-macos-asar` |
+| Asset directory | Supported | Declared ESM asset only |
+| Evidence bundle | Supported | Static, screenshot, accessibility, interaction, and computed-style evidence |
+| Public web URL | Supported | Public HTTPS only through the packaged [Chromium WebCaptureDriver v1](docs/web-capture-rfc.md); no authentication or session reuse |
+
+A screenshot is supported only as evidence inside a valid evidence bundle. Arbitrary screenshots, recordings, and HTML files are not standalone inputs. Web capture accepts public HTTPS pages on the default port only; it rejects credentials, login/session reuse, localhost, intranet, private/reserved addresses, and IP literals. Public deployment and telemetry are also out of scope. Security invariants (read-only source, per-write approval, fail-closed preview isolation) are enforced in Core.
 
 ## Repository layout
 

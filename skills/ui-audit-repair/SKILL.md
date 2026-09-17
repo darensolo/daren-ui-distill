@@ -26,6 +26,19 @@ metadata: {"skill_id":"ui-audit-repair","governance_status":"active","required_r
 
 缺隔离、缺基线、报告过期或权限不足时返回 blocked/unsupported，不降低检查标准。
 
+## 用户可见的开始与交付
+
+开始 `audit-only` 前，用一句话明确说明：当前操作只读取被检对象，不修改被检对象、来源或基准；允许的写入仅限独立报告或隔离缓存，并说明其位置（若已知）。不要要求用户先记住 skill 名称。
+
+QualityReport 的用户可见结尾必须包含：
+
+- 当前模式、subject revision、profile/checkset 与 freshness；
+- 按严重级别汇总的 finding 数量，以及仍为 unknown/unclassified 的必检项；
+- 推荐的下一步顺序，并提供一条可以直接使用的自然语言指令，例如“只修复这份报告中的 P1 finding，完成后对受影响状态重新审计”；
+- repair 会触及的 finding 范围和 write scope；用户只要求检查时不得自动进入 repair。用户已经明确要求修复且范围清楚时，不再追加机械式二次确认。
+
+若存在同一 subject 的上一份新鲜报告，结果应区分 resolved、persisting、new 和 not-rechecked；无法建立稳定 finding 身份时明确说明当前不能可靠比较，不按文案相似度猜测。
+
 ## 高保真资产的持续差异发现闭环
 
 当目标包含“高保真、1:1、复刻、对齐旧版”时，结构完整性和交互可触发只能算开始，不能据此交付。审计必须先把来源与候选锁在相同的 `state × viewport × theme × locale × container width/crop`；整页截图与组件裁片、不同状态或不同容器宽度不得直接互判。

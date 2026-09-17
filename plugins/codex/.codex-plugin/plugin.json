@@ -1,6 +1,6 @@
 {
   "name": "ui-distiller",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Local-first UI decomposition, replication, Daren adaptation, asset registration, site publication, and bounded audit/repair skills.",
   "author": { "name": "Darren" },
   "license": "Apache-2.0",

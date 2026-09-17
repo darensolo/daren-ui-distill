@@ -25,6 +25,10 @@ export async function selfCheck() {
   const manifest = JSON.parse(await readFile(path.join(pluginRoot, relativePath), 'utf8'));
   const release = JSON.parse(await readFile(path.join(pluginRoot, 'runtime/release.json'), 'utf8'));
   const runtimePackage = JSON.parse(await readFile(path.join(pluginRoot, 'runtime/package.json'), 'utf8'));
+  if (runtimePackage.exports?.['./web-capture'] !== './packages/core/web-capture.mjs'
+    || runtimePackage.exports?.['./chromium-web-driver'] !== './packages/core/drivers/chromium-web-driver.mjs') {
+    throw new Error('web capture export mismatch');
+  }
   const pluginBaseVersion = manifest.version.split('+', 1)[0];
   const [major, minor] = process.versions.node.split('.').map(Number);
   if (major < 24 || (major === 24 && minor < 20) || major >= 26) throw new Error(`unsupported Node ${process.version}; expected >=24.20 <26`);
@@ -54,10 +58,12 @@ export async function selfCheck() {
   const runtime = await import(path.join(pluginRoot, 'runtime/packages/core/index.mjs'));
   const adapter = await import(path.join(pluginRoot, 'runtime/adapters/local-folder/index.mjs'));
   if (typeof runtime.runBlueprintAdaptPipeline !== 'function' || typeof runtime.runAssetAdaptPipeline !== 'function'
+    || typeof runtime.captureWebUrl !== 'function' || typeof runtime.createChromiumWebCaptureDriver !== 'function'
     || typeof adapter.registerLocalAsset !== 'function' || typeof adapter.publishLocalAsset !== 'function') {
     throw new Error('runtime production pipelines are not public');
   }
-  return { status: 'passed', platform, plugin: manifest.name, version: manifest.version, node: process.version, skills };
+  const webCaptureDriver = await runtime.createChromiumWebCaptureDriver();
+  return { status: 'passed', platform, plugin: manifest.name, version: manifest.version, node: process.version, skills, webCaptureDriver: webCaptureDriver.capability.status };
 }
 
 selfCheck().then(

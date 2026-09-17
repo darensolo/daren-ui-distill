@@ -1,6 +1,6 @@
 ---
 name: ui-replica-engine
-description: "粒度感知 UI 复刻引擎（D24 v0.1）。当用户要求复刻、克隆、重建、1:1 还原某个应用界面或界面资产，或输入本地应用、公开网页、图标/组件/区块/页面 asset-ref 时使用。本 skill 先按阶段 -1 自动路由到 icon / component / block / page 分支，再按 D24 invocation contract 执行；唯一硬必填是 source，默认 target=Daren、granularity=auto、reproductionDepth=source+adapt 且保留 Source Replica。v0.1 目标侧固定 Daren Design，任意目标设计系统是 v0.2 参数化路线；治理 grade/license/canRealClone/stable 归 D16/D13，本 skill 只透传 governanceRef。机读门仅 tokens:lint / design-harness:check / 结构报告；截图 diff、状态矩阵、交互巡检为人工 evidenceRef。"
+description: "从 UI Distiller 支持的本地来源、公共 HTTPS URL、有效 Blueprint 或可解析 asset-ref 复刻 icon、component、block 或 page，并保留独立 Source Replica。用于复刻、克隆、重建和 1:1 还原请求。"
 metadata: {"skill_id":"ui-replica-engine","governance_status":"active","required_references":[],"optional_references":["references/source-replica.md","references/replicate.md","references/plan.md","references/distiller-integration.md"],"historical_references":[],"publication_kind":"copy","publication_platforms":["codex","qoder"]}
 ---
 
@@ -8,7 +8,7 @@ metadata: {"skill_id":"ui-replica-engine","governance_status":"active","required
 
 当请求明确使用 UI Distiller、有效 Blueprint 或新阶段组合时，先读 `references/distiller-integration.md`。有效 Blueprint 直接复刻，不重新捕获；“原样复刻”不得隐式适配。未命中新集成时，保留下文既有 D24 手工流程与兼容默认。
 
-把一个现有应用或界面资产高保真地复刻进 Daren Design。D24 v0.1 的引擎**输入侧源无关**：源可以是用户指定的本地应用、公开网页，或调用方传入的图标/组件/区块/页面资产引用；**目标侧固定为 Daren Design**。任意目标设计系统属于 v0.2 的参数化路线，不在 v0.1 冒充通用。
+把一个现有应用或界面资产高保真地复刻进 Daren Design。D24 v0.1 只接受 `release.json` 标为 supported 的来源、有效 Blueprint，或调用方可解析的图标/组件/区块/页面资产引用；**目标侧固定为 Daren Design**。公共 HTTPS URL 可通过打包的隔离 Chromium WebCaptureDriver 采集；不得用任意浏览器会话、登录态或宿主 DevTools 绕过该驱动的安全边界。任意目标设计系统属于 v0.2 的参数化路线，不在 v0.1 冒充通用。
 
 本技能以当前文件的调用约定、`references/*` 分支说明，以及插件自带的 `packages/contracts` JSON Schema 为分发真源。宿主若提供更严格的治理契约，可以追加约束，但不得放宽这里的来源、保真和授权边界。
 
@@ -20,7 +20,10 @@ metadata: {"skill_id":"ui-replica-engine","governance_status":"active","required
 
 ```ts
 replica.invoke({
-  source: { kind: "local-app" | "web-url" | "asset-ref", ref: string },
+  source: {
+    kind: "installed-app" | "application-archive" | "asset-directory" | "evidence-bundle" | "web-url" | "blueprint" | "asset-ref",
+    ref: string,
+  },
   granularity?: "icon" | "component" | "block" | "page",
   targetDesignSystem?: "none" | { tokensSource: string },
   reproductionDepth?: "source-only" | "source+adapt",
@@ -41,9 +44,12 @@ replica.invoke({
 
 输入边界：
 
-- `local-app`：用户本机应用；桌面/Electron 可进入 `extract-desktop.md`。
-- `web-url`：仅公开页面；遇登录态、cookie、私有 session 返回 `needs-human-source`，不自行登录、不存凭据。
+- `installed-app` / `application-archive`：已安装应用或受支持的应用归档；桌面/Electron 可进入 `extract-desktop.md`。
+- `asset-directory`：符合 release contract 的 declared ESM asset directory。
+- `evidence-bundle`：有效证据包；截图必须作为证据包的一部分输入，不能把任意截图、录屏或 HTML 当成已支持来源。
+- `blueprint`：有效且 digest 匹配的 Blueprint；直接进入复刻，不重新捕获。
 - `asset-ref`：调用方传入的图标/组件/区块/页面资产引用；无法解析返回 `asset-ref-unresolved`。
+- `web-url`：仅接受公共 HTTPS 默认端口，经打包的隔离 Chromium 驱动采集 DOM、截图、可访问性树和计算样式；进入 `extract-web.md`。不得登录、读取或复用 cookie/session，也不得访问 localhost、内网、IP literal 或任意端口。
 
 治理边界：
 
@@ -91,7 +97,7 @@ replica.invoke({
 ```
 阶段 0  从应用的真实资源中提取一份事实基线
          └─ 桌面 / Electron → references/extract-desktop.md （配合 scripts/extract_asar.sh）
-         └─ Web 应用          → references/extract-web.md      （预留；目前较精简）
+         └─ 公共 HTTPS URL    → references/extract-web.md（隔离 Chromium WebCaptureDriver）
          └─ 按 L1 令牌（Tokens） / L2 组件（Components） / L3 模式（Patterns） / L4 模板（Templates） 提取
          └─ 产出：一份「测量基线」文档（原型骨架、尺寸、调色板、组件、菜单、交互契约）
 
@@ -121,7 +127,7 @@ replica.invoke({
 
 1. **判断应用类型。**
    - 发布了 `app.asar` 的桌面应用（多数 Electron 应用）→ 阅读 `references/extract-desktop.md` 并运行 `scripts/extract_asar.sh <AppName>`。
-   - Web 应用 → 阅读 `references/extract-web.md`（DevTools 计算样式 + DOM）。
+   - 公共 HTTPS URL → 阅读 `references/extract-web.md`，通过打包的驱动生成并落盘 CaptureBundle；不得复用现有浏览器会话。
 2. **按 L1-L4 挖掘真实资源**（细节见参考文档）：L1 提取 token / 色值 / 字体 / 间距 / 圆角 / 动效；L2 从 CSS / JS / DOM 中提取基础组件；L3 提取场景化模式、状态流和交互契约；L4 提取整页 shell、页面骨架、区域拓扑和窗口 / 响应式规则。
 3. **从截图测量结构**——针对那些不在 CSS 里的东西（区域宽度、行高）。注意 Retina → 逻辑像素的换算，并把估算值标记为 ⚠️「需在真机上校正」——不要把截图猜测当成官方数值呈现。
 4. **撰写基线文档。** 使用 `references/extract-desktop.md` §「基线文档模板」中的结构：原型骨架（区域示意图）、L1-L4 分层事实表、真实调色板、组件清单、菜单集，以及一份明确的「交互契约」列表。这份文档就是阶段 0 的交付物。

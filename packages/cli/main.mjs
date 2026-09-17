@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import {
-  assertRelativePath, auditAsset, buildBlueprint, captureSource, compileCapture, createDeliveryAuthorization, createJobStore,
+  assertRelativePath, auditAsset, buildBlueprint, captureSource, captureWebUrl, compileCapture, createChromiumWebCaptureDriver, createDeliveryAuthorization, createJobStore,
   digestObject, DistillError, executeStages, generateAdaptedAsset, generateSourceReplica, mapBlueprintToDaren, materializeAsset, optimizeAssetWithJournal, projectBlueprintMarkdown, resolveAuthorizedPath, sha256Bytes,
   reconcileMaterialization, runAssetAdaptPipeline, runBlueprintAdaptPipeline, runBlueprintPipeline,
 } from '../core/index.mjs';
@@ -29,11 +29,34 @@ async function readPayload(options) {
 }
 
 function bindCaptureAuthority(payload, options) {
-  if (Object.hasOwn(payload, 'baseDir') || payload.scope?.readRoots !== undefined) {
-    throw new DistillError('PAYLOAD_AUTHORITY_CONFLICT', 'capture payload cannot set baseDir or readRoots; CLI boundary options are authoritative');
+  if (Object.hasOwn(payload, 'baseDir') || payload.scope !== undefined) {
+    throw new DistillError('PAYLOAD_AUTHORITY_CONFLICT', 'capture payload cannot set baseDir or scope; CLI boundary options are authoritative');
   }
-  if (options.readRoots.length === 0) throw new DistillError('MISSING_READ_ROOT', 'capture requires at least one --read-root');
+  if (payload.source?.kind === 'web-url') return payload;
+  if (options.readRoots.length === 0) throw new DistillError('MISSING_READ_ROOT', 'local capture requires at least one --read-root');
   return { ...payload, baseDir: options.baseDir, scope: { readRoots: [...options.readRoots] } };
+}
+
+async function captureInput(payload, options) {
+  const request = bindCaptureAuthority(payload, options);
+  if (request.source?.kind !== 'web-url') return captureSource(request);
+  if (!options.outDir) throw new DistillError('MISSING_OUT_DIR', 'web capture requires an explicit --out-dir for evidence');
+  assertRelativePath(options.outDir);
+  const driver = await createChromiumWebCaptureDriver();
+  const result = await captureWebUrl({
+    url: request.source.url ?? request.source.href,
+    viewport: request.viewport, theme: request.theme, locale: request.locale, limits: request.limits,
+    artifactRoot: options.outDir, driver,
+  });
+  const prefix = options.outDir + '/';
+  if (!result.capture.source.ref.relativePath.startsWith(prefix)) throw new DistillError('INVALID_WEB_CAPTURE_RESULT', 'web evidence root does not match --out-dir');
+  const capturePath = result.capture.source.ref.relativePath.slice(prefix.length);
+  const files = [
+    ...result.artifacts.map((artifact) => ({ relativePath: artifact.relativePath, content: artifact.bytes })),
+    { relativePath: capturePath, content: JSON.stringify(result.capture, null, 2) + '\n' },
+  ];
+  await materializeAsset({ files }, { baseDir: options.baseDir, writeRoots: [options.outDir], targetRoot: options.outDir });
+  return result.capture;
 }
 
 function jobStore(options) {
@@ -51,7 +74,7 @@ function pipelineInput(payload, inputKind) {
 
 async function dissectInput(payload, inputKind, options) {
   const capture = inputKind === 'source'
-    ? await captureSource(bindCaptureAuthority(payload.captureRequest ?? payload, options))
+    ? await captureInput(payload.captureRequest ?? payload, options)
     : payload.capture ?? payload.bundle ?? payload;
   if (!capture) throw new DistillError('MISSING_CAPTURE', 'dissect requires a CaptureBundle or an authorized source capture request');
   const blueprint = buildBlueprint({ capture, proposal: payload.proposal, blueprintId: payload.blueprintId, revision: payload.revision, rights: payload.rights });
@@ -252,7 +275,7 @@ async function run() {
   }
   const payload = await readPayload(options);
   if (options.command === 'capture') {
-    process.stdout.write(`${JSON.stringify(await captureSource(bindCaptureAuthority(payload, options)))}\n`);
+    process.stdout.write(`${JSON.stringify(await captureInput(payload, options))}\n`);
     return;
   }
   if (options.command === 'compile') {

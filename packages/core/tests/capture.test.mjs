@@ -8,6 +8,18 @@ import { captureSource } from '../capture.mjs';
 import { compileCapture } from '../compiler.mjs';
 import { digestObject, sha256Bytes } from '../digest.mjs';
 
+test('capture routes web URLs to the isolated driver boundary', async () => {
+  await assert.rejects(
+    () => captureSource({
+      baseDir: '.',
+      scope: { readRoots: [] },
+      source: { kind: 'web-url', relativePath: 'https://example.com' },
+      selectors: ['index.html'],
+    }),
+    (error) => error.code === 'WEB_CAPTURE_DRIVER_REQUIRED' && /captureWebUrl/.test(error.message),
+  );
+});
+
 test('capture reads only selected authorized files and compilation is deterministic', async (t) => {
   const root = await mkdtemp(path.join(tmpdir(), 'dh05-capture-'));
   t.after(async () => (await import('node:fs/promises')).rm(root, { recursive: true, force: true }));

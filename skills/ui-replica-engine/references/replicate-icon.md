@@ -9,7 +9,7 @@
 必须有 `source`：
 
 - `asset-ref`：调用方传入单个 SVG/path 或图标资产标识。
-- `web-url`：公开页面上的单个 SVG/icon 节点；需登录态返回 `needs-human-source`。
+- `web-url`：先按 `extract-web.md` 通过隔离驱动生成证据包，再从 DOM/static 证据中的 SVG/icon 候选提取；图标仍需 license/source 证据，无证据默认 HOLD。
 - `local-app`：用户本机应用资源中的单个图标；若无法定位到单个资产，返回 `needs-human-granularity` 或转人工指定。
 
 ## License 前置

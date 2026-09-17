@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>ChatGPT — Source Replica</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg class="svg-sprite" aria-hidden="true">
+      <symbol id="i-logo" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.55">
+          <rect x="9.2" y="2.2" width="5.6" height="10.2" rx="2.8" transform="rotate(0 12 12)" />
+          <rect x="9.2" y="2.2" width="5.6" height="10.2" rx="2.8" transform="rotate(60 12 12)" />
+          <rect x="9.2" y="2.2" width="5.6" height="10.2" rx="2.8" transform="rotate(120 12 12)" />
+          <rect x="9.2" y="2.2" width="5.6" height="10.2" rx="2.8" transform="rotate(180 12 12)" />
+          <rect x="9.2" y="2.2" width="5.6" height="10.2" rx="2.8" transform="rotate(240 12 12)" />
+          <rect x="9.2" y="2.2" width="5.6" height="10.2" rx="2.8" transform="rotate(300 12 12)" />
+        </g>
+      </symbol>
+      <symbol id="i-sidebar" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M9 4v16"/></symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="9" r="1.5"/><path d="m4 17 4.5-4.5 3.2 3.2 2.4-2.4L20 19"/></symbol>
+      <symbol id="i-plugin" viewBox="0 0 24 24"><path d="M8.5 3.5v3M15.5 3.5v3M6 6.5h12v4a6 6 0 0 1-12 0Z"/><path d="M12 16.5v4"/></symbol>
+      <symbol id="i-research" viewBox="0 0 24 24"><path d="m4 19 5.5-5.5"/><circle cx="14" cy="9" r="5"/><path d="M12.5 7.5h3v3"/></symbol>
+      <symbol id="i-plan" viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1A7 7 0 0 0 15 6l-.3-2.6h-4L10.4 6A7 7 0 0 0 8 7.1l-2.4-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1A7 7 0 0 0 10.4 18l.3 2.6h4L15 18a7 7 0 0 0 1.5-1.1l2.4 1 2-3.4-2-1.5a7 7 0 0 0 .1-1Z"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 3.8 1.9c-1 .7-1.5 1.1-1.5 2.1"/><path d="M12 17h.01"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/></symbol>
+      <symbol id="i-wave" viewBox="0 0 24 24"><path d="M5 10v4M9 7v10M13 4v16M17 7v10M21 10v4"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 1.2 4.1L17 9l-3.8 1.9L12 15l-1.2-4.1L7 9l3.8-1.9Z"/><path d="m18 15 .7 2.3L21 18l-2.3.7L18 21l-.7-2.3L15 18l2.3-.7Z"/></symbol>
+    </svg>
+
+    <div class="app-shell" id="appShell">
+      <aside class="sidebar" id="sidebar" aria-label="ChatGPT sidebar">
+        <div class="sidebar-topline">
+          <button class="brand-button icon-button" data-action="new-chat" aria-label="ChatGPT home">
+            <svg class="icon logo-icon"><use href="#i-logo" /></svg>
+          </button>
+          <button class="icon-button sidebar-toggle" data-action="toggle-sidebar" aria-label="Close sidebar" title="Close sidebar">
+            <svg class="icon"><use href="#i-sidebar" /></svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Primary">
+          <button class="nav-row is-active" data-action="new-chat" aria-current="page">
+            <svg class="icon"><use href="#i-edit" /></svg><span class="nav-label">New chat</span>
+          </button>
+          <button class="nav-row" data-action="search-chats">
+            <svg class="icon"><use href="#i-search" /></svg><span class="nav-label">Search chats</span>
+          </button>
+          <button class="nav-row" data-route="images">
+            <svg class="icon"><use href="#i-image" /></svg><span class="nav-label">Images</span><span class="updated">Updated</span>
+          </button>
+          <button class="nav-row" data-route="plugins">
+            <svg class="icon"><use href="#i-plugin" /></svg><span class="nav-label">Plugins</span>
+          </button>
+          <button class="nav-row" data-route="research">
+            <svg class="icon"><use href="#i-research" /></svg><span class="nav-label">Deep research</span>
+          </button>
+        </nav>
+
+        <section class="history" aria-labelledby="historyTitle">
+          <h2 id="historyTitle">Chat history</h2>
+          <p>No saved chats yet</p>
+        </section>
+
+        <div class="sidebar-footer">
+          <button class="nav-row" data-action="plans">
+            <svg class="icon"><use href="#i-plan" /></svg><span class="nav-label">See plans and pricing</span>
+          </button>
+          <button class="nav-row" data-action="settings">
+            <svg class="icon"><use href="#i-settings" /></svg><span class="nav-label">Settings</span>
+          </button>
+          <button class="nav-row" data-action="help">
+            <svg class="icon"><use href="#i-help" /></svg><span class="nav-label">Help</span>
+          </button>
+          <div class="login-card">
+            <div class="login-card-icon"><svg class="icon logo-icon"><use href="#i-logo" /></svg></div>
+            <div class="login-card-copy">
+              <strong>Get responses tailored to you</strong>
+              <p>Log in to get answers based on saved chats, plus create images and upload files.</p>
+              <button class="secondary-button wide" data-auth="login">Log in</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-surface">
+        <header class="topbar">
+          <button class="mobile-menu icon-button" data-action="toggle-mobile-sidebar" aria-label="Open sidebar">
+            <svg class="icon"><use href="#i-sidebar" /></svg>
+          </button>
+          <button class="model-button" data-action="model-info">
+            <span>ChatGPT</span><svg class="icon tiny"><use href="#i-chevron" /></svg>
+          </button>
+          <div class="auth-actions">
+            <button class="primary-button" data-auth="login">Log in</button>
+            <button class="secondary-button" data-auth="signup">Sign up for free</button>
+          </div>
+        </header>
+
+        <section class="workspace" id="workspace" aria-live="polite">
+          <div class="home-copy">
+            <h1>Where should we begin?</h1>
+          </div>
+
+          <section class="destination-panel" id="destinationPanel" hidden>
+            <div class="destination-icon"><svg class="icon"><use href="#i-spark" /></svg></div>
+            <h1 id="destinationTitle">Images</h1>
+            <p id="destinationCopy">Create and explore images in ChatGPT.</p>
+            <button class="secondary-button" data-action="return-home">Back to ChatGPT</button>
+          </section>
+
+          <section class="conversation" id="conversation" hidden aria-label="Local demo conversation">
+            <div class="message user-message" id="userMessage"></div>
+            <div class="message assistant-message">
+              <span class="assistant-mark"><svg class="icon logo-icon"><use href="#i-logo" /></svg></span>
+              <div><strong>Local replica</strong><p>This interaction is a visual demo. No request was sent to ChatGPT.</p></div>
+            </div>
+          </section>
+
+          <form class="composer" id="composer" autocomplete="off">
+            <label class="sr-only" for="prompt">Message ChatGPT</label>
+            <textarea id="prompt" rows="1" placeholder="Ask anything" aria-label="Message ChatGPT"></textarea>
+            <div class="composer-actions">
+              <div class="composer-left">
+                <button class="round-button" type="button" data-action="attachments" aria-label="Add photos and files" aria-expanded="false">
+                  <svg class="icon"><use href="#i-plus" /></svg>
+                </button>
+              </div>
+              <div class="composer-right">
+                <button class="round-button mic-button" type="button" data-action="microphone" aria-label="Use microphone" aria-pressed="false">
+                  <svg class="icon"><use href="#i-mic" /></svg>
+                </button>
+                <button class="voice-button" type="button" data-action="voice" aria-label="Start voice mode">
+                  <svg class="icon"><use href="#i-wave" /></svg>
+                </button>
+                <button class="send-button" type="submit" aria-label="Send prompt" hidden>
+                  <svg class="icon"><use href="#i-send" /></svg>
+                </button>
+              </div>
+            </div>
+            <div class="attachment-menu" id="attachmentMenu" role="menu" hidden>
+              <button type="button" role="menuitem" data-attachment="files"><svg class="icon"><use href="#i-file" /></svg><span><strong>Add photos &amp; files</strong><small>Available after login</small></span></button>
+              <button type="button" role="menuitem" data-route="images"><svg class="icon"><use href="#i-image" /></svg><span><strong>Create image</strong><small>Open Images</small></span></button>
+              <button type="button" role="menuitem" data-route="research"><svg class="icon"><use href="#i-research" /></svg><span><strong>Deep research</strong><small>Explore a topic in depth</small></span></button>
+            </div>
+          </form>
+        </section>
+
+        <footer class="legal-note">
+          ChatGPT is AI. By using it, you agree to our
+          <a href="https://openai.com/policies/terms-of-use/" target="_blank" rel="noreferrer">Terms</a>
+          &amp; <a href="https://openai.com/policies/privacy-policy/" target="_blank" rel="noreferrer">Privacy Policy</a>.
+          Chats may be reviewed and used to improve our AI models.
+          <a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance" target="_blank" rel="noreferrer">Learn more</a>
+        </footer>
+      </main>
+    </div>
+
+    <div class="search-overlay" id="searchOverlay" hidden>
+      <section class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+        <div class="search-input-row">
+          <svg class="icon"><use href="#i-search" /></svg>
+          <label class="sr-only" for="searchInput" id="searchTitle">Search chats</label>
+          <input id="searchInput" type="search" placeholder="Search chats" />
+          <button class="key-button" type="button" data-action="close-search" aria-label="Close search">Esc</button>
+        </div>
+        <div class="search-empty">
+          <svg class="icon"><use href="#i-search" /></svg>
+          <strong>No saved chats</strong>
+          <p>Log in to search and revisit your conversations.</p>
+        </div>
+      </section>
+    </div>
+
+    <dialog class="auth-dialog" id="authDialog">
+      <button class="dialog-close icon-button" data-action="close-auth" aria-label="Close dialog">
+        <svg class="icon"><use href="#i-close" /></svg>
+      </button>
+      <div class="dialog-logo"><svg class="icon logo-icon"><use href="#i-logo" /></svg></div>
+      <h2 id="authTitle">Log in to ChatGPT</h2>
+      <p>This Source Replica does not connect to OpenAI authentication. Continue on the official site when you want to use a real account.</p>
+      <a class="primary-button dialog-link" href="https://chatgpt.com/" target="_blank" rel="noreferrer">Open official ChatGPT</a>
+      <button class="secondary-button" data-action="close-auth">Stay in the replica</button>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <div class="mobile-scrim" id="mobileScrim" data-action="close-mobile-sidebar" hidden></div>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

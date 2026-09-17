@@ -58,7 +58,8 @@ test('Qoder build contains only its host manifest and canonical skill projection
 
   const check = spawnSync(process.execPath, [path.join(first, 'scripts/self-check.mjs')], { encoding: 'utf8' });
   assert.equal(check.status, 0, check.stderr);
-  assert.deepEqual(JSON.parse(check.stdout), {
+  const { webCaptureDriver, ...facts } = JSON.parse(check.stdout);
+  assert.deepEqual(facts, {
     status: 'passed',
     platform: 'qoder',
     plugin: 'ui-distiller',
@@ -66,6 +67,7 @@ test('Qoder build contains only its host manifest and canonical skill projection
     node: process.version,
     skills: expectedSkills,
   });
+  assert.equal(['available', 'unavailable'].includes(webCaptureDriver), true);
 });
 
 test('Qoder package launcher reaches the shared runtime', async (t) => {

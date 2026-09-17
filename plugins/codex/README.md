@@ -24,6 +24,15 @@ codex plugin add ui-distiller@<local-marketplace-name>
 
 The default personal marketplace is discovered by Codex; do not add it again with `codex plugin marketplace add`. For a non-default marketplace, confirm it is local and configured before installation. Start a new Codex conversation after install or upgrade so skill discovery refreshes.
 
+Start with a goal in ordinary language; skill names are optional:
+
+- “Capture https://example.com at 1440×900, then decompose it into a page Blueprint.”
+- “Inspect this local page, report the UI problems, and do not modify source files.”
+- “Analyze this supported source into a Blueprint only.”
+- “Repair only the P1 findings in this report, then re-audit the affected states.”
+
+Public HTTPS URL capture is supported through the packaged isolated Chromium driver. It requires an installed Chrome, Chromium, Edge, or Brave executable and does not accept authentication, existing sessions, localhost, intranet, IP literals, HTTP, or non-default ports. A screenshot is accepted only as part of a valid evidence bundle.
+
 Upgrade by building a fresh package, validating it, atomically replacing only the registered plugin source, and running the same `codex plugin add` command. Disable or uninstall with:
 
 ```bash

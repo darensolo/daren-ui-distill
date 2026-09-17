@@ -195,6 +195,8 @@ test('thin CLI check prints machine-readable capability facts', () => {
   const output = JSON.parse(result.stdout);
   assert.equal(output.toolId, 'ui-distiller');
   assert.equal(output.security.executeSourceScripts, false);
+  assert.equal(output.security.liveWebPageScripts, 'isolated-ephemeral-browser-only');
+  assert.equal(output.supportedSources['web-url'].status, 'supported');
 });
 
 test('capture payload cannot replace CLI base directory or read-root authority', async (t) => {
@@ -202,6 +204,11 @@ test('capture payload cannot replace CLI base directory or read-root authority',
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'allowed'));
   await writeFile(path.join(root, 'allowed', 'safe.txt'), 'safe');
+  const missingWebOutput = spawnSync(process.execPath, [
+    fileURLToPath(new URL('./main.mjs', import.meta.url)), 'capture', '--base-dir', root, '--json',
+  ], { input: JSON.stringify({ source: { kind: 'web-url', url: 'https://example.com/' } }), encoding: 'utf8' });
+  assert.equal(missingWebOutput.status, 1);
+  assert.equal(JSON.parse(missingWebOutput.stderr).code, 'MISSING_OUT_DIR');
   const payload = {
     baseDir: '/',
     scope: { readRoots: ['private'] },

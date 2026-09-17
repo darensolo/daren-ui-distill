@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": "https://chatgpt.com/",
+  "capturedAt": "2026-09-17",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "theme": "light",
+  "locale": "en-US",
+  "state": "public-logged-out",
+  "observationStatus": "partial",
+  "evidence": [
+    {
+      "kind": "live-accessibility-content",
+      "status": "observed",
+      "source": "https://chatgpt.com/",
+      "visibleText": [
+        "New chat",
+        "Images",
+        "Search chats",
+        "Chat history",
+        "Plugins",
+        "Deep research",
+        "See plans and pricing",
+        "Settings",
+        "Help",
+        "Get responses tailored to you",
+        "Log in to get answers based on saved chats, plus create images and upload files.",
+        "Log in",
+        "ChatGPT",
+        "Sign up for free",
+        "Where should we begin?",
+        "ChatGPT is AI. By using it, you agree to our Terms & Privacy Policy. Chats may be reviewed and used to improve our AI models. Learn more"
+      ]
+    },
+    {
+      "kind": "official-help",
+      "status": "observed",
+      "source": "https://help.openai.com/en/articles/9125172",
+      "note": "Confirms the logged-out homepage accepts a prompt and that New chat starts a fresh unsaved conversation."
+    },
+    {
+      "kind": "isolated-browser-capture",
+      "status": "blocked",
+      "source": "https://chatgpt.com/",
+      "error": "WEB_CAPTURE_NAVIGATION_FAILED: net::ERR_TIMED_OUT",
+      "note": "The ephemeral no-cookie capture did not materialize partial evidence. No login or bypass was attempted."
+    }
+  ],
+  "unverified": [
+    "Exact computed colors, dimensions and spacing",
+    "Exact current source SVG paths",
+    "Hover and animation timing",
+    "Authenticated states",
+    "Pixel-diff baseline"
+  ]
+}

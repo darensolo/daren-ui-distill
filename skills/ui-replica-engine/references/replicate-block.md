@@ -6,7 +6,7 @@
 
 ## 输入与路由
 
-支持 `local-app`、公开 `web-url`、`asset-ref`。遇登录态返回 `needs-human-source`；无法解析 asset-ref 返回 `asset-ref-unresolved`。
+支持 release contract 声明的本地来源、公共 HTTPS `web-url`、证据包，以及可解析的 `asset-ref`。URL 必须先按 `extract-web.md` 生成证据；无法解析 asset-ref 返回 `asset-ref-unresolved`。
 
 `granularity=auto` 时，多 primitive 组合、有 slots/区域拓扑、但不含整页导航模型时进入本分支。若包含完整 shell、路由、导航模型和多个区块，转 `page`；若只是一件独立 primitive，转 `component`。
 

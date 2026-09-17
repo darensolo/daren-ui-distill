@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+## 0.4.0 — 2026-09-17
+
+- Aligned skill, runtime, and onboarding guidance with the declared source boundary; public HTTPS capture is explicit while authenticated, local, private-network, and arbitrary-port URLs fail closed.
+- Added goal-oriented first-use examples and explicit audit-only behavior for Codex and Qoder packages.
+- Added structured audit comparison across compatible revisions with resolved, persisting, new, and not-rechecked finding sets.
+- Added a packaged zero-dependency Chromium WebCaptureDriver with pinned public-HTTPS proxying, ephemeral profiles, deterministic evidence normalization, transactional CLI materialization, and two-viewport/package end-to-end acceptance.
+- Added a runnable ChatGPT public-home Source Replica example with baseline, plan, interaction tests, candidate screenshot, and an evidence-backed fidelity report.
+
 ## 0.3.0 — 2026-09-17
 
 - Renamed the product, repository, package, plugin, CLI, and local runtime identifiers to UI Distiller / `ui-distiller`.

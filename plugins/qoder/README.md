@@ -14,6 +14,15 @@ node /tmp/ui-distiller-qoder/bin/ui-distiller.mjs check --json
 
 The output directory must not already exist. Import the built directory as a local plugin from Qoder's plugin management UI. Do not import `plugins/qoder` directly: it intentionally omits generated runtime and skill projections.
 
+After install or upgrade, refresh skill discovery and start with a goal in ordinary language; skill names are optional:
+
+- “Capture https://example.com at 1440×900, then decompose it into a page Blueprint.”
+- “Inspect this local page, report the UI problems, and do not modify source files.”
+- “Analyze this supported source into a Blueprint only.”
+- “Repair only the P1 findings in this report, then re-audit the affected states.”
+
+Public HTTPS URL capture is supported through the packaged isolated Chromium driver. It requires an installed Chrome, Chromium, Edge, or Brave executable and does not accept authentication, existing sessions, localhost, intranet, IP literals, HTTP, or non-default ports. A screenshot is accepted only as part of a valid evidence bundle.
+
 ## Capability boundaries
 
 - Qoder discovers the same six skill entry points as Codex; there are no Qoder-only workflow forks.

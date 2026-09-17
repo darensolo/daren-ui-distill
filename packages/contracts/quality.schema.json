@@ -25,7 +25,24 @@
     },
     "findings": {
       "type": "array",
-      "items": { "type": "object", "additionalProperties": false, "required": ["id", "severity", "status", "subjectRef"], "properties": { "id": { "type": "string", "minLength": 1 }, "severity": { "enum": ["P0", "P1", "P2", "P3"] }, "status": { "enum": ["open", "fixed", "accepted"] }, "subjectRef": { "$ref": "common.schema.json#/$defs/ref" } } }
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "severity", "status", "subjectRef"], "properties": { "id": { "type": "string", "minLength": 1 }, "checkId": { "type": "string", "minLength": 1 }, "severity": { "enum": ["P0", "P1", "P2", "P3"] }, "status": { "enum": ["open", "fixed", "accepted"] }, "subjectRef": { "$ref": "common.schema.json#/$defs/ref" } } }
+    },
+    "comparison": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "resolved", "persisting", "new", "notRechecked"],
+      "properties": {
+        "status": { "enum": ["compared", "not-comparable"] },
+        "reason": { "enum": ["previous-report-not-fresh", "subject-changed", "profile-changed", "checkset-changed", "duplicate-finding-id"] },
+        "previousSubjectRef": { "$ref": "common.schema.json#/$defs/ref" },
+        "resolved": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "persisting": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "new": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "notRechecked": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "allOf": [
+        { "if": { "properties": { "status": { "const": "compared" } } }, "then": { "required": ["previousSubjectRef"] } },
+        { "if": { "properties": { "status": { "const": "not-comparable" } } }, "then": { "required": ["reason"] } }
+      ]
     },
     "qualityOutcome": { "$ref": "common.schema.json#/$defs/qualityState" },
     "runtimeVerification": { "enum": ["unverified", "verified", "blocked"] },

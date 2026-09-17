@@ -2,11 +2,11 @@
   "schemaVersion": "1.0.0",
   "toolId": "ui-distiller",
   "displayName": "UI Distiller",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "contracts": {
     "schema": "1.0.2",
-    "core": "0.3.0",
-    "plugin": "0.3.0"
+    "core": "0.4.0",
+    "plugin": "0.4.0"
   },
   "runtime": {
     "moduleFormat": "esm",
@@ -19,7 +19,7 @@
     "application-archive": { "status": "supported", "formats": ["codex-macos-asar"] },
     "asset-directory": { "status": "supported", "formats": ["declared-esm-asset"] },
     "evidence-bundle": { "status": "supported", "formats": ["static", "screenshot", "accessibility", "interaction", "computed-style"] },
-    "web-url": { "status": "unsupported", "reason": "contract placeholder; DH05 MVP does not claim generic web capture" }
+    "web-url": { "status": "supported", "formats": ["public-https"], "driver": "chromium-cdp-v1" }
   },
   "actions": ["dissect", "replicate", "adapt", "register", "publish", "inspect"],
   "productionStages": ["dissect", "replicate", "adapt", "register", "publish"],
@@ -30,11 +30,15 @@
   },
   "limits": {
     "repairRoundsPerJob": 3,
-    "archiveResourceBytes": 1073741824
+    "archiveResourceBytes": 1073741824,
+    "webRedirects": 5,
+    "webArtifactBytes": 8388608,
+    "webTotalBytes": 25165824
   },
   "security": {
     "sourceMutation": false,
     "executeSourceScripts": false,
+    "liveWebPageScripts": "isolated-ephemeral-browser-only",
     "telemetryService": false,
     "libraryWrite": "explicit-approval-only",
     "siteWrite": "explicit-approval-only",

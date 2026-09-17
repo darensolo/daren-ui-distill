@@ -42,8 +42,8 @@ if [[ -z "$ASAR" || ! -f "$ASAR" ]]; then
   cat >&2 <<EOF
 找不到 "$APP" 的 app.asar。
 - 确认应用已安装（macOS：/Applications/${APP}.app）。
-- 该应用可能是 Tauri / 原生（没有 asar）—— 直接检视 Contents/Resources/，
-  或当作 Web 应用处理（见 references/extract-web.md）。
+- 该应用可能是 Tauri / 原生（没有 asar）—— 可在授权范围内直接检视本地 Contents/Resources/。
+- 如果应用只加载公共 HTTPS URL，转入 references/extract-web.md 的隔离 Web Capture 流程；不要提取或复用桌面会话凭据。
 - Windows：%LOCALAPPDATA%\\${APP}\\app-*\\resources\\app.asar
 - Linux：  /opt/${APP}/resources/app.asar  （或在 AppImage 内部）
 你也可以直接传入路径：extract_asar.sh /path/to/app.asar

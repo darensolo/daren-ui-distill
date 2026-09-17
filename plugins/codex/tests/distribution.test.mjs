@@ -28,6 +28,9 @@ async function treeDigest(root) {
 }
 
 test('canonical skills route explicit and natural-language intents without widening stages', async () => {
+  const release = JSON.parse(await readFile(path.join(repoRoot, 'release.json'), 'utf8'));
+  assert.equal(release.supportedSources['web-url'].status, 'supported');
+  assert.deepEqual(release.supportedSources['web-url'].formats, ['public-https']);
   for (const skill of expectedSkills) {
     const canonical = await readFile(path.join(repoRoot, 'skills', skill, 'SKILL.md'), 'utf8');
     assert.match(canonical, new RegExp(`name: ${skill}`));
@@ -39,9 +42,14 @@ test('canonical skills route explicit and natural-language intents without widen
   const replicate = await readFile(path.join(repoRoot, 'skills/ui-replica-engine/SKILL.md'), 'utf8');
   assert.match(replicate, /有效 Blueprint[^\n]+不重新捕获|valid Blueprint[^\n]+no re-capture/i);
   assert.match(replicate, /不得隐式适配|must not implicitly adapt/i);
+  const invocationContract = replicate.match(/replica\.invoke\(\{[\s\S]*?\n\}\)/)?.[0] ?? '';
+  assert.match(invocationContract, /web-url/);
+  assert.match(replicate, /web-url[^\n]+公共 HTTPS[^\n]+不得登录/);
   const audit = await readFile(path.join(repoRoot, 'skills/ui-audit-repair/SKILL.md'), 'utf8');
   assert.match(audit, /默认[^\n]+audit-only|audit-only[^\n]+默认|default[^\n]+audit-only/i);
   assert.match(audit, /Blueprint[^\n]+unsupported/i);
+  assert.match(audit, /只读取被检对象[^\n]+不修改被检对象/);
+  assert.match(audit, /resolved、persisting、new 和 not-rechecked/);
   const registrar = await readFile(path.join(repoRoot, 'skills/design-asset-registrar/SKILL.md'), 'utf8');
   const publisher = await readFile(path.join(repoRoot, 'skills/design-asset-publisher/SKILL.md'), 'utf8');
   assert.match(registrar, /RegistrationReceipt/);
@@ -71,6 +79,7 @@ test('build is deterministic and built package self-checks with version parity',
   assert.equal(manifest.license, 'Apache-2.0');
   await access(path.join(first, 'LICENSE'));
   assert.match(await readFile(path.join(first, 'THIRD_PARTY_NOTICES.md'), 'utf8'), /Ajv 8\.20\.0[\s\S]+fast-uri 3\.1\.8/);
+  assert.match(await readFile(path.join(first, 'docs/web-capture-rfc.md'), 'utf8'), /implemented and packaged/i);
   await access(path.join(first, 'runtime/vendor/ajv.mjs'));
   await assert.rejects(access(path.join(first, 'node_modules')), /ENOENT/);
   const check = spawnSync(process.execPath, [path.join(first, 'scripts/self-check.mjs')], { encoding: 'utf8' });

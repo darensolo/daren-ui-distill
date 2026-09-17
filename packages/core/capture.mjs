@@ -8,6 +8,7 @@ import { fail } from './errors.mjs';
 import { assertRelativePath, resolveAuthorizedPath, toPosixRelative } from './scope.mjs';
 
 const notApplicable = (reason) => ({ status: 'not-applicable', reason });
+const supportedSourceKinds = ['installed-app', 'application-archive', 'asset-directory', 'evidence-bundle'];
 const sensitiveDirectory = /^(cookies?|login data|local storage|session storage|web data|keychain|\.ssh|\.aws|\.gnupg)$/i;
 const sensitiveFile = /^(?:\.env(?:\..+)?|id_(?:rsa|dsa|ecdsa|ed25519)(?:\.pub)?|authorized_keys|credentials|.+\.(?:pem|p12|pfx|key))$/i;
 
@@ -59,8 +60,12 @@ export async function captureSource({
   observations = [],
   limits = {},
 }) {
-  if (!source || !['installed-app', 'application-archive', 'asset-directory', 'evidence-bundle'].includes(source.kind)) {
-    fail('UNSUPPORTED_SOURCE', `unsupported source kind: ${source?.kind ?? 'missing'}`);
+  if (source?.kind === 'web-url') {
+    fail('WEB_CAPTURE_DRIVER_REQUIRED', 'web-url capture requires captureWebUrl with an isolated WebCaptureDriver; use the CLI capture command to select the packaged Chromium driver');
+  }
+  if (!source || !supportedSourceKinds.includes(source.kind)) {
+    const requestedKind = source?.kind ?? 'missing';
+    fail('UNSUPPORTED_SOURCE', 'unsupported source kind: ' + requestedKind + '. Supported source kinds: ' + supportedSourceKinds.join(', ') + '.');
   }
   if (!Array.isArray(selectors) || selectors.length === 0) fail('EMPTY_SELECTION', 'capture requires explicit resource selectors');
   selectors.forEach(assertRelativePath);

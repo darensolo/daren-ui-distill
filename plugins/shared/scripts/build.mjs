@@ -45,6 +45,8 @@ export async function buildPluginDistribution(platform, outputDirectory) {
   await cp(path.join(distributionRoot, 'README.md'), path.join(output, 'README.md'));
   await cp(path.join(repoRoot, 'LICENSE'), path.join(output, 'LICENSE'));
   await cp(path.join(repoRoot, 'THIRD_PARTY_NOTICES.md'), path.join(output, 'THIRD_PARTY_NOTICES.md'));
+  await mkdir(path.join(output, 'docs'), { recursive: true });
+  await cp(path.join(repoRoot, 'docs/web-capture-rfc.md'), path.join(output, 'docs/web-capture-rfc.md'));
   await mkdir(path.join(output, 'scripts'), { recursive: true });
   await cp(path.join(sharedRoot, 'scripts/self-check.mjs'), path.join(output, 'scripts/self-check.mjs'));
 

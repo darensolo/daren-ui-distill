@@ -23,7 +23,7 @@ npx @electron/asar extract "$ASAR" "<outdir>"
 
 注意事项：
 - 有些应用拆分成 `app.asar` + `app.asar.unpacked`（原生部分以未打包形式存放；你要的渲染层 CSS/JS 在 `app.asar` 里）。
-- 如果没有 `app.asar`，该应用可能是 Tauri / 原生，或使用普通的 `Resources/` —— 退而直接 grep `Contents/Resources/`，或者如果它加载的是远程 / 本地 URL，就当作 Web 应用处理（见 `extract-web.md`）。
+- 如果没有 `app.asar`，该应用可能是 Tauri / 原生，或使用普通的 `Resources/`：在授权范围内直接检查本地 `Contents/Resources/`。如果它只加载公共 HTTPS URL，转入 `extract-web.md` 的隔离 Web Capture 流程；不要从桌面应用会话提取 cookie 或登录态。
 - Windows 上路径通常是 `%LOCALAPPDATA%\<App>\app-*\resources\app.asar`；Linux 上是 `/opt/<App>/resources/app.asar` 或在 AppImage 内部。
 
 ## 2. 挖掘样式表 —— 颜色、变量、字体

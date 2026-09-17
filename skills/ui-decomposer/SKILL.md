@@ -15,7 +15,7 @@ metadata: {"skill_id":"ui-decomposer","governance_status":"active","required_ref
 
 ## 执行契约
 
-1. 确认来源属于工具声明的 supported source，并锁定 `baseDir`、read roots、selectors 与权限。网页 URL、账号数据、cookie/session 和未授权来源返回 typed unsupported/blocked。
+1. 确认来源属于工具声明的 supported source，并锁定权限；本地来源还要锁定 `baseDir`、read roots 和 selectors。公共 HTTPS URL 必须经打包的隔离 WebCaptureDriver 捕获并落盘证据；认证页面、账号数据、cookie/session、localhost/内网和未授权来源返回 typed blocked。
 2. 已有有效 CaptureBundle 时直接编译；没有时仅捕获明确选择的资源。静态内容不得执行，未知状态保持 unknown。
 3. 校验并交付 Blueprint、digest、runtime evidence gaps 和同源投影。`generationReady` 与来源运行已验证是两条独立结论。
 4. 只拆解必须是零 Generator、零适配、零候选执行、零 Library/Site effect。需要入库或上架时显式交给 `design-asset-registrar` / `design-asset-publisher`，不得由本 skill 顺带执行。
