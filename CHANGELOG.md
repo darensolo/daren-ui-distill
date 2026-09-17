@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0 — 2026-09-17
+
+- Renamed the product, repository, package, plugin, CLI, and local runtime identifiers to UI Distiller / `ui-distiller`.
+- Kept the six-stage contracts and security boundaries unchanged; this release changes identifiers and import/install paths.
+
 ## 0.2.3 — 2026-09-16
 
 - Exported shared authorization, path-scope, receipt and publication helpers through the public adapter kit so host adapters do not fork delivery semantics.
@@ -18,7 +23,7 @@
 
 ## 0.2.0 — 2026-09-16
 
-- Extracted contracts, core, CLI and the six UI Distill skills from Mindex-Next by allowlist.
+- Extracted contracts, core, CLI and the six UI Distiller skills from Mindex-Next by allowlist.
 - Added Codex and Qoder local plugin package targets.
 - Added the generic `local-folder` registration and publication reference adapter.
 - Published the source under Apache-2.0 with fresh-clone verification.

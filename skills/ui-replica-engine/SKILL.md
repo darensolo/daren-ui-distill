@@ -1,12 +1,12 @@
 ---
 name: ui-replica-engine
 description: "粒度感知 UI 复刻引擎（D24 v0.1）。当用户要求复刻、克隆、重建、1:1 还原某个应用界面或界面资产，或输入本地应用、公开网页、图标/组件/区块/页面 asset-ref 时使用。本 skill 先按阶段 -1 自动路由到 icon / component / block / page 分支，再按 D24 invocation contract 执行；唯一硬必填是 source，默认 target=Daren、granularity=auto、reproductionDepth=source+adapt 且保留 Source Replica。v0.1 目标侧固定 Daren Design，任意目标设计系统是 v0.2 参数化路线；治理 grade/license/canRealClone/stable 归 D16/D13，本 skill 只透传 governanceRef。机读门仅 tokens:lint / design-harness:check / 结构报告；截图 diff、状态矩阵、交互巡检为人工 evidenceRef。"
-metadata: {"skill_id":"ui-replica-engine","governance_status":"active","required_references":[],"optional_references":["references/source-replica.md","references/replicate.md","references/plan.md","references/distill-integration.md"],"historical_references":[],"publication_kind":"copy","publication_platforms":["codex","qoder"]}
+metadata: {"skill_id":"ui-replica-engine","governance_status":"active","required_references":[],"optional_references":["references/source-replica.md","references/replicate.md","references/plan.md","references/distiller-integration.md"],"historical_references":[],"publication_kind":"copy","publication_platforms":["codex","qoder"]}
 ---
 
 # 应用界面复刻引擎（UI Replica Engine）
 
-当请求明确使用 Daren UI Distill、有效 Blueprint 或新阶段组合时，先读 `references/distill-integration.md`。有效 Blueprint 直接复刻，不重新捕获；“原样复刻”不得隐式适配。未命中新集成时，保留下文既有 D24 手工流程与兼容默认。
+当请求明确使用 UI Distiller、有效 Blueprint 或新阶段组合时，先读 `references/distiller-integration.md`。有效 Blueprint 直接复刻，不重新捕获；“原样复刻”不得隐式适配。未命中新集成时，保留下文既有 D24 手工流程与兼容默认。
 
 把一个现有应用或界面资产高保真地复刻进 Daren Design。D24 v0.1 的引擎**输入侧源无关**：源可以是用户指定的本地应用、公开网页，或调用方传入的图标/组件/区块/页面资产引用；**目标侧固定为 Daren Design**。任意目标设计系统属于 v0.2 的参数化路线，不在 v0.1 冒充通用。
 

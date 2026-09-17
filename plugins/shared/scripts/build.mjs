@@ -87,7 +87,7 @@ export async function buildPluginDistribution(platform, outputDirectory) {
   const bundledValidator = validator.replace("import Ajv from 'ajv';", "import Ajv from '../../vendor/ajv.mjs';");
   if (bundledValidator === validator) throw new Error('Ajv import projection was not applied');
   await writeFile(validatorPath, bundledValidator);
-  await chmod(path.join(output, 'bin/daren-ui-distill.mjs'), 0o755);
+  await chmod(path.join(output, 'bin/ui-distiller.mjs'), 0o755);
 
   return { status: 'built', platform, output, skills: packagedSkills, productionDependencies };
 }

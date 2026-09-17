@@ -3,7 +3,7 @@
 D24 page 分支兼容锚点：
 
 - 宿主提供旧 D24 `replica-fidelity-contract.md` / `invocation-contract.md` 时，读取其中 page 契约；独立插件不得假设固定仓库或绝对路径。
-- 宿主未提供旧契约时，以随插件发行的 UI Distill contracts/runtime 为准；无法安全映射的旧字段 fail closed。
+- 宿主未提供旧契约时，以随插件发行的 UI Distiller contracts/runtime 为准；无法安全映射的旧字段 fail closed。
 - 目标 v0.1：Daren Design；任意目标设计系统为 v0.2 参数化路线
 - 设计系统 machine gates：从当前宿主 `package.json` 发现并选择 `tokens:lint`、`design-harness:check` 与结构/source report；不硬编码宿主路径
 

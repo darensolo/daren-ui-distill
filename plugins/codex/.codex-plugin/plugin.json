@@ -1,13 +1,13 @@
 {
-  "name": "daren-ui-distill",
-  "version": "0.2.3",
+  "name": "ui-distiller",
+  "version": "0.3.0",
   "description": "Local-first UI decomposition, replication, Daren adaptation, asset registration, site publication, and bounded audit/repair skills.",
   "author": { "name": "Darren" },
   "license": "Apache-2.0",
   "keywords": ["ui", "blueprint", "replication", "design-system", "audit"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Daren UI Distiller",
+    "displayName": "UI Distiller",
     "shortDescription": "Distill UI into registered, site-visible assets",
     "longDescription": "Six MECE Codex skills over one validated local runtime for UI Blueprint decomposition, source replication, explicit Daren adaptation, Daren Design registration, local Astro site publication, and audit-only or bounded repair.",
     "developerName": "Darren",

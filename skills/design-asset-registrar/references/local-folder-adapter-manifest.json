@@ -4,7 +4,7 @@
     "registry",
     "evidenceStore"
   ],
-  "evidenceRoot": ".ui-distill/evidence",
+  "evidenceRoot": ".ui-distiller/evidence",
   "forbiddenCapabilities": [
     "externalBusinessSystems",
     "privateManualQueue",

@@ -48,7 +48,7 @@ async function existingReceipt({ baseDir, targetRoot, fileName, desiredFiles, re
   return current;
 }
 
-export async function registerLocalAsset({ bundle, approval, baseDir, libraryRoot = '.ui-distill/library' }) {
+export async function registerLocalAsset({ bundle, approval, baseDir, libraryRoot = '.ui-distiller/library' }) {
   assertBundle(bundle);
   const slug = bundle.assetPackage.assetId;
   const assetId = `local/${slug}`;
@@ -93,7 +93,7 @@ export async function registerLocalAsset({ bundle, approval, baseDir, libraryRoo
   return { receipt, materialization };
 }
 
-export async function readLocalRegistrationReceipt({ baseDir, libraryRoot = '.ui-distill/library', receiptPath }) {
+export async function readLocalRegistrationReceipt({ baseDir, libraryRoot = '.ui-distiller/library', receiptPath }) {
   const receipt = JSON.parse(await readFile(await resolveWithin(baseDir, libraryRoot, receiptPath), 'utf8'));
   const validation = validateContract('registration-receipt', receipt);
   if (!validation.valid) fail('INVALID_REGISTRATION_RECEIPT', JSON.stringify(validation.errors));
@@ -119,7 +119,7 @@ async function verifyRegistration({ baseDir, libraryRoot, receipt }) {
   return registration;
 }
 
-export async function publishLocalAsset({ registrationReceipt, metadata, approval, baseDir, libraryRoot = '.ui-distill/library', siteRoot = '.ui-distill/site' }) {
+export async function publishLocalAsset({ registrationReceipt, metadata, approval, baseDir, libraryRoot = '.ui-distiller/library', siteRoot = '.ui-distiller/site' }) {
   await verifyRegistration({ baseDir, libraryRoot, receipt: registrationReceipt });
   const normalized = normalizePublicationMetadata(metadata);
   const slug = registrationReceipt.assetRef.id.replace(/^local\//, '');

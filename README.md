@@ -1,12 +1,12 @@
-# Daren UI Distill
+# UI Distiller
 
 **Turn authorized UI evidence into inspectable, adaptable design assets — locally.**
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v0.2.3-6b5ce7)](https://github.com/darensolo/daren-ui-distill/releases/tag/v0.2.3)
+[![Version](https://img.shields.io/badge/version-v0.3.0--next-6b5ce7)](CHANGELOG.md)
 [![Node](https://img.shields.io/badge/node-%3E%3D24.20%20%3C26-3c873a)](package.json)
 
-Daren UI Distill is a local-first pipeline that decomposes authorized UI sources — installed-app archives, asset directories, saved evidence bundles — into Blueprints, faithful Source Replicas, and design-system-adapted assets. Every stage keeps its own evidence and receipts, so each effect can be reviewed, retried, or rolled back. It ships as local plugins for Codex Desktop and Qoder IDE. Product page: [daren.design/distill](https://www.daren.design/distill/).
+UI Distiller is a local-first pipeline that decomposes authorized UI sources — installed-app archives, asset directories, saved evidence bundles — into Blueprints, faithful Source Replicas, and design-system-adapted assets. Every stage keeps its own evidence and receipts, so each effect can be reviewed, retried, or rolled back. It ships as local plugins for Codex Desktop and Qoder IDE. Product page: [daren.design/distiller](https://www.daren.design/distiller/).
 
 ## Highlights
 
@@ -22,8 +22,8 @@ Daren UI Distill is a local-first pipeline that decomposes authorized UI sources
 Requirements: macOS (Apple Silicon or Intel) · Node.js >= 24.20 < 26 · pnpm.
 
 ```bash
-git clone https://github.com/darensolo/daren-ui-distill.git
-cd daren-ui-distill
+git clone https://github.com/darensolo/ui-distiller.git
+cd ui-distiller
 pnpm install --frozen-lockfile
 
 # Build a self-contained host package and verify it
@@ -61,7 +61,7 @@ Audit is a cross-cutting, read-only action over any stage. Contracts and Core ar
 
 ## Capability boundary
 
-Supported sources today: installed-app / application archives (`codex-macos-asar`), declared ESM asset directories, and evidence bundles (static, screenshot, accessibility, interaction, computed-style). Explicitly out of scope for v0.2.3: generic web-URL capture, public deployment, and any telemetry. The machine-readable boundary is [release.json](release.json); security invariants (read-only source, per-write approval, fail-closed preview isolation) are enforced in Core.
+Supported sources today: installed-app / application archives (`codex-macos-asar`), declared ESM asset directories, and evidence bundles (static, screenshot, accessibility, interaction, computed-style). Explicitly out of scope for v0.3.0: generic web-URL capture, public deployment, and any telemetry. The machine-readable boundary is [release.json](release.json); security invariants (read-only source, per-write approval, fail-closed preview isolation) are enforced in Core.
 
 ## Repository layout
 
@@ -72,7 +72,7 @@ Supported sources today: installed-app / application archives (`codex-macos-asar
 - `plugins/codex`, `plugins/qoder` — thin host manifests over one shared package builder.
 - `skills` — canonical source for the six product skills.
 
-Host-specific Library/Site adapters must import the supported bridge from `daren-ui-distill/adapter-kit`; internal `packages/` paths are not public API.
+Host-specific Library/Site adapters must import the supported bridge from `ui-distiller/adapter-kit`; internal `packages/` paths are not public API.
 
 ## Contributing, security, license
 

@@ -30,8 +30,8 @@ export function parseArgs(argv) {
     jobRoot: null,
     jobId: null,
     operationId: null,
-    libraryRoot: '.ui-distill/library',
-    siteRoot: '.ui-distill/site',
+    libraryRoot: '.ui-distiller/library',
+    siteRoot: '.ui-distiller/site',
     keepSourceReplica: true,
     json: false,
   };

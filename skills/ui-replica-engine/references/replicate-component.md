@@ -2,7 +2,7 @@
 
 本分支用于 `granularity=component`：一个可独立渲染的 primitive 或 field-level component，包含完整状态集和必要变体。组件可以来自 demo 页，但 scope 必须锁定为单件组件，不扩展成整页复刻。
 
-兼容锚点：宿主提供旧 D24 fidelity/invocation、D17 machine-gate 与 D20 field-state contract 时读取 component 条款；独立插件不假设固定仓库或绝对路径。缺失时使用随插件发行的 UI Distill contracts/runtime，无法安全映射的旧字段 fail closed。
+兼容锚点：宿主提供旧 D24 fidelity/invocation、D17 machine-gate 与 D20 field-state contract 时读取 component 条款；独立插件不假设固定仓库或绝对路径。缺失时使用随插件发行的 UI Distiller contracts/runtime，无法安全映射的旧字段 fail closed。
 
 ## 输入与路由
 

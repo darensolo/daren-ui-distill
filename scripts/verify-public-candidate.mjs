@@ -13,7 +13,7 @@ const blockedEverywhere = [
   { label: 'AWS access key', pattern: /\bAKIA[0-9A-Z]{16}\b/ },
 ];
 const blockedRuntimeReferences = [
-  { label: 'legacy monorepo path', pattern: /tooling\/daren-ui-distill|Mindex-Next/ },
+  { label: 'legacy monorepo path', pattern: /tooling\/(?:daren-ui-distill|ui-distiller)|Mindex-Next/ },
   { label: 'private governance path', pattern: /kyber\/skills-library|kyber\/rules/ },
   { label: 'unbundled D24 spec path', pattern: /specs\/D24-granularity-replica-engine/ },
 ];

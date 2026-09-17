@@ -2,7 +2,7 @@
 
 本分支只用于 `granularity=icon`。它是极轻路径：提取单个 SVG/path，normalize 到 Daren 图标规范，登记为 D11 候选；**不走**页面级 5 阶段应用复刻流程。
 
-兼容锚点：宿主提供旧 D24 fidelity/invocation 与 D11 icon-governance contract 时读取 icon 条款；独立插件不假设固定仓库或绝对路径。缺失时使用随插件发行的 UI Distill contracts/runtime，无法安全映射的旧字段 fail closed。
+兼容锚点：宿主提供旧 D24 fidelity/invocation 与 D11 icon-governance contract 时读取 icon 条款；独立插件不假设固定仓库或绝对路径。缺失时使用随插件发行的 UI Distiller contracts/runtime，无法安全映射的旧字段 fail closed。
 
 ## 输入
 

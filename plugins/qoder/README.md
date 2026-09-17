@@ -1,15 +1,15 @@
-# Daren UI Distiller · Qoder package
+# UI Distiller · Qoder package
 
-This is the Qoder host projection of the shared Daren UI Distill runtime and its six canonical MECE skills. Qoder-specific content is limited to the manifest and this installation guide; runtime code and skill bodies stay shared with the Codex package.
+This is the Qoder host projection of the shared UI Distiller runtime and its six canonical MECE skills. Qoder-specific content is limited to the manifest and this installation guide; runtime code and skill bodies stay shared with the Codex package.
 
 ## Build and validate
 
 Node `>=24.20 <26` is required. From the repository root:
 
 ```bash
-node build.mjs --target qoder --out /tmp/daren-ui-distill-qoder
-node /tmp/daren-ui-distill-qoder/scripts/self-check.mjs
-node /tmp/daren-ui-distill-qoder/bin/daren-ui-distill.mjs check --json
+node build.mjs --target qoder --out /tmp/ui-distiller-qoder
+node /tmp/ui-distiller-qoder/scripts/self-check.mjs
+node /tmp/ui-distiller-qoder/bin/ui-distiller.mjs check --json
 ```
 
 The output directory must not already exist. Import the built directory as a local plugin from Qoder's plugin management UI. Do not import `plugins/qoder` directly: it intentionally omits generated runtime and skill projections.

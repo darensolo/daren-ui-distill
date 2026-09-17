@@ -1,6 +1,6 @@
-# Daren UI Distill integration
+# UI Distiller integration
 
-Read this optional reference only when the user explicitly asks to adapt an existing compatible asset or Source Replica through Daren UI Distill.
+Read this optional reference only when the user explicitly asks to adapt an existing compatible asset or Source Replica through UI Distiller.
 
 - Input is an existing AssetPackage/Source Replica plus a versioned Daren target reference. Do not recapture or re-run source replication.
 - Create a physically separate adapted AssetPackage and retain the source artifact unchanged.

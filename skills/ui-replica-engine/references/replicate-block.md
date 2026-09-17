@@ -2,7 +2,7 @@
 
 本分支用于 `granularity=block`：由多个 primitive 组成、有明确 slots/区域拓扑、但不是整页 shell 的可复用组合段。
 
-兼容锚点：宿主提供旧 D24 fidelity/invocation 与 D20 registry contract 时读取 block 条款；独立插件不假设固定仓库或绝对路径。缺失时使用随插件发行的 UI Distill contracts/runtime，无法安全映射的旧字段 fail closed。
+兼容锚点：宿主提供旧 D24 fidelity/invocation 与 D20 registry contract 时读取 block 条款；独立插件不假设固定仓库或绝对路径。缺失时使用随插件发行的 UI Distiller contracts/runtime，无法安全映射的旧字段 fail closed。
 
 ## 输入与路由
 

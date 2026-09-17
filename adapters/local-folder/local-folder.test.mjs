@@ -14,7 +14,7 @@ import { publicationApprovalInputDigest, publishLocalAsset, registerLocalAsset }
 const fixtures = JSON.parse(await readFile(new URL('../../packages/contracts/fixtures/valid.json', import.meta.url), 'utf8'));
 
 test('local-folder adapter registers and publishes with separate receipts and idempotent retries', async t => {
-  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distill-local-folder-'));
+  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distiller-local-folder-'));
   t.after(() => rm(baseDir, { recursive: true, force: true }));
   const blueprint = structuredClone(fixtures.cases.find(entry => entry.name === 'blueprint-generation-ready').value);
   blueprint.digest = digestObject(blueprint);
@@ -22,7 +22,7 @@ test('local-folder adapter registers and publishes with separate receipts and id
   const bundle = generateAdaptedAsset(generateSourceReplica(blueprint), mapBlueprintToDaren(blueprint, { targetRef }));
   const slug = bundle.assetPackage.assetId;
   const assetId = `local/${slug}`;
-  const libraryTarget = `.ui-distill/library/assets/${slug}`;
+  const libraryTarget = `.ui-distiller/library/assets/${slug}`;
   const registrationApproval = (await createDeliveryAuthorization({
     confirmed: true, id: 'register-fixture', capability: 'library-write', targetRoot: libraryTarget,
     subjectId: assetId, subjectRevision: 1, inputDigest: bundle.bundleDigest, baseDir,
@@ -39,7 +39,7 @@ test('local-folder adapter registers and publishes with separate receipts and id
   }
 
   const metadata = { title: 'Fixture component', description: 'Synthetic local publication.', category: 'Fixture', visibility: 'listed' };
-  const siteTarget = `.ui-distill/site/publications/${slug}`;
+  const siteTarget = `.ui-distiller/site/publications/${slug}`;
   const publicationApproval = (await createDeliveryAuthorization({
     confirmed: true, id: 'publish-fixture', capability: 'site-write', targetRoot: siteTarget,
     subjectId: assetId, subjectRevision: 1, inputDigest: publicationApprovalInputDigest(registered.receipt, metadata), baseDir,

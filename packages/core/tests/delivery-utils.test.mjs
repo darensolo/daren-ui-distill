@@ -9,7 +9,7 @@ import { sha256Bytes } from '../digest.mjs';
 
 const scope = {
   capability: 'library-write',
-  targetRoot: '.ui-distill/library/assets/fixture',
+  targetRoot: '.ui-distiller/library/assets/fixture',
   subjectId: 'local/fixture',
   subjectRevision: 1,
   inputDigest: 'a'.repeat(64),
@@ -37,7 +37,7 @@ async function assertTargetAbsent(baseDir) {
 }
 
 test('delivery approval rejects a non-authorization ref before any target write', async t => {
-  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distill-approval-kind-'));
+  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distiller-approval-kind-'));
   t.after(() => rm(baseDir, { recursive: true, force: true }));
   const approval = await approvalAt(baseDir, 'wrong-ref-kind');
   approval.ref.kind = 'asset-package';
@@ -46,7 +46,7 @@ test('delivery approval rejects a non-authorization ref before any target write'
 });
 
 test('delivery approval rejects an unparseable expiry before any target write', async t => {
-  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distill-approval-date-'));
+  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distiller-approval-date-'));
   t.after(() => rm(baseDir, { recursive: true, force: true }));
   const approval = await approvalAt(baseDir, 'invalid-expiry', 'not-a-date');
   await assert.rejects(() => requireApproval({ approval, baseDir, ...scope }), error => error.code === 'INVALID_AUTHORIZATION');
@@ -54,7 +54,7 @@ test('delivery approval rejects an unparseable expiry before any target write', 
 });
 
 test('delivery approval rejects an expired authorization before any target write', async t => {
-  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distill-approval-expired-'));
+  const baseDir = await mkdtemp(path.join(tmpdir(), 'ui-distiller-approval-expired-'));
   t.after(() => rm(baseDir, { recursive: true, force: true }));
   const approval = await approvalAt(baseDir, 'expired-approval', '2020-01-01T00:00:00.000Z');
   await assert.rejects(() => requireApproval({ approval, baseDir, ...scope }), error => error.code === 'AUTHORIZATION_EXPIRED');

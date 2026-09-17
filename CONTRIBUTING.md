@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve Daren UI Distill.
+Thanks for helping improve UI Distiller.
 
 1. Open an issue before making a large contract or architecture change.
 2. Keep the six production stages and registration/publication receipts explicit.

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
-import * as adapterKit from 'daren-ui-distill/adapter-kit';
+import * as adapterKit from 'ui-distiller/adapter-kit';
 
 test('host adapters consume one explicit public kit and exported contract fixtures', async () => {
   for (const name of [
@@ -14,9 +14,9 @@ test('host adapters consume one explicit public kit and exported contract fixtur
   ]) {
     assert.equal(typeof adapterKit[name], 'function', `${name} is not exported`);
   }
-  const fixture = JSON.parse(await readFile(new URL(import.meta.resolve('daren-ui-distill/contracts/fixtures/valid.json')), 'utf8'));
+  const fixture = JSON.parse(await readFile(new URL(import.meta.resolve('ui-distiller/contracts/fixtures/valid.json')), 'utf8'));
   assert.equal(Array.isArray(fixture.cases), true);
   assert.equal(fixture.cases.length > 0, true);
-  const release = JSON.parse(await readFile(new URL(import.meta.resolve('daren-ui-distill/release.json')), 'utf8'));
-  assert.equal(release.version, '0.2.3');
+  const release = JSON.parse(await readFile(new URL(import.meta.resolve('ui-distiller/release.json')), 'utf8'));
+  assert.equal(release.version, '0.3.0');
 });

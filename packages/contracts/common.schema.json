@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://daren.design/schemas/distill/common.schema.json",
-  "title": "Daren UI Distill common values",
+  "title": "UI Distiller common values",
   "$defs": {
     "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "relativePath": {

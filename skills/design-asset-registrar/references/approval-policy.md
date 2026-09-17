@@ -25,7 +25,7 @@ Before changing any of these, ask for confirmation unless the user has already e
 - Existing registered assets.
 - Skill files themselves.
 
-For UI Distill registration, confirmation is persisted through the Core `authorize` command using `schemas/authorization.schema.json`. The authorization must bind `capability=library-write`, the exact distilled target, `subjectId`, `subjectRevision`, and the adapted bundle digest as `inputDigest`. A boolean embedded in the register payload is not approval.
+For UI Distiller registration, confirmation is persisted through the Core `authorize` command using `schemas/authorization.schema.json`. The authorization must bind `capability=library-write`, the exact distilled target, `subjectId`, `subjectRevision`, and the adapted bundle digest as `inputDigest`. A boolean embedded in the register payload is not approval.
 
 ## Upgrade And Realign
 

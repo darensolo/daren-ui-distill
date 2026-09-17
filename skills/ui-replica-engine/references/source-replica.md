@@ -3,7 +3,7 @@
 D24 page 分支兼容锚点：
 
 - 宿主提供旧 D24 `replica-fidelity-contract.md` / `invocation-contract.md` 时，读取其中 page 契约；独立插件不得假设固定仓库或绝对路径。
-- 宿主未提供旧契约时，以随插件发行的 UI Distill contracts/runtime 为准；无法安全映射的旧字段 fail closed。
+- 宿主未提供旧契约时，以随插件发行的 UI Distiller contracts/runtime 为准；无法安全映射的旧字段 fail closed。
 - v0.1 machine gates：`pnpm tokens:lint`、`pnpm design-harness:check`、结构/source report
 - v0.1 manual gates：状态矩阵、截图 diff、交互巡检，均留 `evidenceRef`
 

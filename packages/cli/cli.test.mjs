@@ -133,7 +133,7 @@ test('public core and CLI run materialize a validated Blueprint into an explicit
   const distribution = path.join(root, 'distribution');
   await buildCodexDistribution(distribution);
   const launched = spawnSync(process.execPath, [
-    path.join(distribution, 'bin/daren-ui-distill.mjs'), 'run', '--base-dir', root,
+    path.join(distribution, 'bin/ui-distiller.mjs'), 'run', '--base-dir', root,
     '--input-kind', 'blueprint', '--reproduction-depth', 'source-only', '--target-design-system', 'none',
     '--out-dir', 'launcher-output', '--json',
   ], { input: JSON.stringify(blueprint), encoding: 'utf8' });
@@ -193,7 +193,7 @@ test('thin CLI check prints machine-readable capability facts', () => {
   const result = spawnSync(process.execPath, [fileURLToPath(new URL('./main.mjs', import.meta.url)), 'check', '--json'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
   const output = JSON.parse(result.stdout);
-  assert.equal(output.toolId, 'daren-ui-distill');
+  assert.equal(output.toolId, 'ui-distiller');
   assert.equal(output.security.executeSourceScripts, false);
 });
 

@@ -26,7 +26,7 @@ async function treeDigest(root) {
 }
 
 test('Qoder build contains only its host manifest and canonical skill projections', async (t) => {
-  const temp = await mkdtemp(path.join(tmpdir(), 'daren-ui-distill-qoder-'));
+  const temp = await mkdtemp(path.join(tmpdir(), 'ui-distiller-qoder-'));
   t.after(() => rm(temp, { recursive: true, force: true }));
   const first = path.join(temp, 'first');
   const second = path.join(temp, 'second');
@@ -61,7 +61,7 @@ test('Qoder build contains only its host manifest and canonical skill projection
   assert.deepEqual(JSON.parse(check.stdout), {
     status: 'passed',
     platform: 'qoder',
-    plugin: 'daren-ui-distill',
+    plugin: 'ui-distiller',
     version: manifest.version,
     node: process.version,
     skills: expectedSkills,
@@ -69,12 +69,12 @@ test('Qoder build contains only its host manifest and canonical skill projection
 });
 
 test('Qoder package launcher reaches the shared runtime', async (t) => {
-  const temp = await mkdtemp(path.join(tmpdir(), 'daren-ui-distill-qoder-launcher-'));
+  const temp = await mkdtemp(path.join(tmpdir(), 'ui-distiller-qoder-launcher-'));
   t.after(() => rm(temp, { recursive: true, force: true }));
-  const built = path.join(temp, 'daren-ui-distill');
+  const built = path.join(temp, 'ui-distiller');
   const build = spawnSync(process.execPath, [path.join(toolRoot, 'build.mjs'), '--target', 'qoder', '--out', built], { encoding: 'utf8' });
   assert.equal(build.status, 0, build.stderr);
-  const result = spawnSync(process.execPath, [path.join(built, 'bin/daren-ui-distill.mjs'), 'check', '--json'], { encoding: 'utf8' });
+  const result = spawnSync(process.execPath, [path.join(built, 'bin/ui-distiller.mjs'), 'check', '--json'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(JSON.parse(result.stdout).toolId, 'daren-ui-distill');
+  assert.equal(JSON.parse(result.stdout).toolId, 'ui-distiller');
 });

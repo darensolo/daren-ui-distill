@@ -28,7 +28,7 @@ export async function selfCheck() {
   const pluginBaseVersion = manifest.version.split('+', 1)[0];
   const [major, minor] = process.versions.node.split('.').map(Number);
   if (major < 24 || (major === 24 && minor < 20) || major >= 26) throw new Error(`unsupported Node ${process.version}; expected >=24.20 <26`);
-  if (manifest.name !== 'daren-ui-distill') throw new Error('plugin name mismatch');
+  if (manifest.name !== 'ui-distiller') throw new Error('plugin name mismatch');
   if (manifest.skills !== './skills/') throw new Error('plugin skills path mismatch');
   if (pluginBaseVersion !== release.contracts.plugin || runtimePackage.version !== release.contracts.core) throw new Error('plugin/core/release version mismatch');
   for (const skill of skills) {
@@ -47,7 +47,7 @@ export async function selfCheck() {
       }
     }
   }
-  const launched = spawnSync(process.execPath, [path.join(pluginRoot, 'bin/daren-ui-distill.mjs'), 'check', '--json'], { encoding: 'utf8' });
+  const launched = spawnSync(process.execPath, [path.join(pluginRoot, 'bin/ui-distiller.mjs'), 'check', '--json'], { encoding: 'utf8' });
   if (launched.status !== 0) throw new Error(`launcher check failed: ${launched.stderr.trim()}`);
   const facts = JSON.parse(launched.stdout);
   if (facts.version !== pluginBaseVersion) throw new Error('launcher version mismatch');

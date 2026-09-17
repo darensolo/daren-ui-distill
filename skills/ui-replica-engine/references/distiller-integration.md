@@ -1,6 +1,6 @@
-# Daren UI Distill integration
+# UI Distiller integration
 
-Read this reference only when the request explicitly uses the Daren UI Distill contracts or asks to compose its stages. The existing D24 manual workflow remains available and unchanged for legacy invocations.
+Read this reference only when the request explicitly uses the UI Distiller contracts or asks to compose its stages. The existing D24 manual workflow remains available and unchanged for legacy invocations.
 
 - A valid, digest-matching C9 Blueprint starts at `replicate`; do not capture or dissect it again.
 - “原样复刻 / source-only” ends after Source Replica and its required checks. Do not implicitly adapt to Daren.

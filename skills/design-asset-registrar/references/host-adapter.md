@@ -12,12 +12,12 @@ Bundled reference host manifest: `references/local-folder-adapter-manifest.json`
 {
   "host": "local-folder",
   "allowedCapabilities": ["registry", "evidenceStore"],
-  "evidenceRoot": ".ui-distill/evidence",
+  "evidenceRoot": ".ui-distiller/evidence",
   "forbiddenCapabilities": ["externalBusinessSystems", "privateManualQueue", "localHiddenService"]
 }
 ```
 
-The reference adapter defaults to `.ui-distill/library` and `.ui-distill/site`. It accepts only validated adapted L2 component AssetPackages, requires separate persisted `library-write` and `site-write` authorizations, and emits separate RegistrationReceipt and PublicationReceipt files.
+The reference adapter defaults to `.ui-distiller/library` and `.ui-distiller/site`. It accepts only validated adapted L2 component AssetPackages, requires separate persisted `library-write` and `site-write` authorizations, and emits separate RegistrationReceipt and PublicationReceipt files.
 
 Daren Design default:
 

@@ -1,18 +1,18 @@
 ---
 name: design-asset-publisher
-description: "Publish an already registered UI Distill component through the configured local SiteAdapter. Supports the bundled local-folder reference host and Daren Design when its host adapter is available; requires a fresh RegistrationReceipt and never registers assets or deploys publicly."
+description: "Publish an already registered UI Distiller component through the configured local SiteAdapter. Supports the bundled local-folder reference host and Daren Design when its host adapter is available; requires a fresh RegistrationReceipt and never registers assets or deploys publicly."
 metadata: {"skill_id":"design-asset-publisher","governance_status":"active","required_references":[],"optional_references":[],"historical_references":[],"publication_kind":"copy","publication_platforms":["codex","qoder"]}
 ---
 
 # Design Asset Publisher（设计资产上架）
 
-Use this skill when the requested endpoint is visibility through a configured local site adapter. It is the only site-publication entry for UI Distill assets.
+Use this skill when the requested endpoint is visibility through a configured local site adapter. It is the only site-publication entry for UI Distiller assets.
 
 ## Boundary
 
 - Input: a fresh `RegistrationReceipt` emitted by the selected LibraryAdapter, plus title, description, category, and `listed | unlisted` visibility.
 - Output: a local site projection and a `PublicationReceipt`.
-- Writes only through the selected SiteAdapter: Daren Astro projection when the Daren host is available, otherwise the bundled `.ui-distill/site/publications/<slug>` reference projection.
+- Writes only through the selected SiteAdapter: Daren Astro projection when the Daren host is available, otherwise the bundled `.ui-distiller/site/publications/<slug>` reference projection.
 - Never creates or repairs component-library truth. Route missing or stale registration back to `design-asset-registrar`.
 - Never deploys a public site. `deploymentStatus` must remain `not-requested`; hosting or release needs separate authorization.
 
@@ -36,6 +36,6 @@ Use this skill when the requested endpoint is visibility through a configured lo
 ## Current support
 
 - Hosts: bundled `local-folder` reference host; current local Daren Design Astro site when its adapter is available.
-- Asset kind: UI Distill adapted L2 `component` registered in the `distilled` collection.
+- Asset kind: UI Distiller adapted L2 `component` registered in the `distilled` collection.
 - Site effects: `local-folder` portable publication projection, or Daren catalog/detail/isolated-preview/search projection.
 - Unsupported: block, template, icon, recipe, public hosting deployment, marketplace submission, and legacy-site writers.

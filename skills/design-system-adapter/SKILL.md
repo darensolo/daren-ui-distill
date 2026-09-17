@@ -1,12 +1,12 @@
 ---
 name: design-system-adapter
 description: "Use when planning or performing UI creation, editing, or adaptation against Daren Design, including Source Replicas, token cleanup, and internal golden-page recipe distillation. Pure inspection of an existing asset routes to ui-audit-repair."
-metadata: {"skill_id":"design-system-adapter","governance_status":"active","required_references":["references/quick-start.md"],"optional_references":["references/token-governance.md","references/component-pattern-routing.md","references/asset-audit.md","references/adapter-plan.md","references/evolution-loop.md","references/page-assembly-sop.md","references/component-detail-golden-page.md","references/distill-integration.md"],"historical_references":[],"publication_kind":"copy","publication_platforms":["codex","qoder"]}
+metadata: {"skill_id":"design-system-adapter","governance_status":"active","required_references":["references/quick-start.md"],"optional_references":["references/token-governance.md","references/component-pattern-routing.md","references/asset-audit.md","references/adapter-plan.md","references/evolution-loop.md","references/page-assembly-sop.md","references/component-detail-golden-page.md","references/distiller-integration.md"],"historical_references":[],"publication_kind":"copy","publication_platforms":["codex","qoder"]}
 ---
 
 # Design System Adapter
 
-只有用户明确要求用 Daren UI Distill 适配已有 AssetPackage / Source Replica 时，才读取 `references/distill-integration.md`。终点只是“检查现有资产/是否符合 Daren”时统一走 `ui-audit-repair`；本 skill 的 review 仅服务于即将实施的创建、修改或适配，不自动创建 adapt job。
+只有用户明确要求用 UI Distiller 适配已有 AssetPackage / Source Replica 时，才读取 `references/distiller-integration.md`。终点只是“检查现有资产/是否符合 Daren”时统一走 `ui-audit-repair`；本 skill 的 review 仅服务于即将实施的创建、修改或适配，不自动创建 adapt job。
 
 把任何 UI 工作拉回 Daren Design，防止页面方言和 token 漂移。若当前项目没有 Daren Design 真源，只能交付 Source Replica 或使用调用方显式提供的版本化 `targetRef`；不得假设某个宿主仓库路径存在。
 
@@ -15,7 +15,7 @@ metadata: {"skill_id":"design-system-adapter","governance_status":"active","requ
 - **Govern**：普通 UI 改动 / review / token 清理。先读最小规则，直接执行并验证。
 - **Adapt + Evolve**：把已有界面、原型、复刻件或 Source Replica 迁入设计系统，并提炼可反哺资产。
 
-内部 golden page 的 recipe / model-instance 提炼归 `Adapt + Evolve`：读取 `asset-audit.md`，涉及页面配方时再读 `page-assembly-sop.md`。最小输出固定为 L1-L4 Snapshot、含字段投影与状态策略的 Model Instance Draft、Interaction Matrix、带 `reuse | extend | new-candidate | local-only | not-now` 和 `pending-human` 的候选清单、Harness Calibration。默认只交付 proposal；除非明确调用 UI Distill，不产出 C9 Blueprint。
+内部 golden page 的 recipe / model-instance 提炼归 `Adapt + Evolve`：读取 `asset-audit.md`，涉及页面配方时再读 `page-assembly-sop.md`。最小输出固定为 L1-L4 Snapshot、含字段投影与状态策略的 Model Instance Draft、Interaction Matrix、带 `reuse | extend | new-candidate | local-only | not-now` 和 `pending-human` 的候选清单、Harness Calibration。默认只交付 proposal；除非明确调用 UI Distiller，不产出 C9 Blueprint。
 
 ## Harness ROI Gate
 

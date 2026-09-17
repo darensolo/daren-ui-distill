@@ -67,8 +67,8 @@ function stageResult(result, targetRoot, jobId, stage) {
 }
 
 async function executeBoundPlan({ options, payload, plan, binding, store }) {
-  const libraryRoot = binding.scope.libraryRoot ?? '.ui-distill/library';
-  const siteRoot = binding.scope.siteRoot ?? '.ui-distill/site';
+  const libraryRoot = binding.scope.libraryRoot ?? '.ui-distiller/library';
+  const siteRoot = binding.scope.siteRoot ?? '.ui-distiller/site';
   const input = pipelineInput(payload, binding.request.inputKind);
   const artifacts = {};
   let dissected = null;
@@ -287,8 +287,8 @@ async function run() {
     if (!payload.binding || !payload.input) throw new DistillError('MISSING_JOB_BINDING', 'resume requires the original canonical binding and input');
     if (digestObject(payload.input) !== payload.binding.inputDigest) throw new DistillError('RESUME_DRIFT', 'resume input differs from the original input');
     if (path.resolve(options.baseDir) !== payload.binding.scope.baseDir) throw new DistillError('RESUME_DRIFT', 'resume base directory differs from the original scope');
-    const originalLibraryRoot = payload.binding.scope.libraryRoot ?? '.ui-distill/library';
-    const originalSiteRoot = payload.binding.scope.siteRoot ?? '.ui-distill/site';
+    const originalLibraryRoot = payload.binding.scope.libraryRoot ?? '.ui-distiller/library';
+    const originalSiteRoot = payload.binding.scope.siteRoot ?? '.ui-distiller/site';
     if (options.libraryRoot !== originalLibraryRoot || options.siteRoot !== originalSiteRoot) throw new DistillError('RESUME_DRIFT', 'resume adapter roots differ from the original scope');
     const plan = { requestedActions: payload.binding.request.requestedActions, resolvedStages: payload.binding.resolvedStages };
     const result = await executeBoundPlan({ options, payload: payload.input, plan, binding: payload.binding, store: jobStore(options) });
